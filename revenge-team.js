@@ -18,9 +18,7 @@ function getCapMaxRange(c) {
 }
 
 function euclideanDistance(x_0, y_0, x, y) {
-    result = Math.sqrt((x - x_0) ^ 2 + (y - y_0) ^ 2);
-    console.log(x_0 + ", ", y_0 + ", ", x + ", ", y + " = ", result);
-    return result;
+    return Math.sqrt(Math.pow(x - x_0, 2) + Math.pow(y - y_0, 2));
 }
 
 function redraw() {
