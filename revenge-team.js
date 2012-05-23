@@ -6,16 +6,15 @@ var cap = {
     x: 100,
     y: 100,
     speed: 20,
+    maxRange: function () {
+        return this.speed * 4;
+    }
 };
 
 var capPreview = {
     x: cap.x,
     y: cap.y
 };
-
-function getCapMaxRange(c) {
-    return c.speed * 2;
-}
 
 function euclideanDistance(x_0, y_0, x, y) {
     return Math.sqrt(Math.pow(x - x_0, 2) + Math.pow(y - y_0, 2));
@@ -31,7 +30,7 @@ function redraw() {
     // range radio
     if (ongoing == "move") {
         ctx.beginPath();
-        ctx.arc(cap.x, cap.y, getCapMaxRange(cap), 0, Math.PI * 2, true);
+        ctx.arc(cap.x, cap.y, cap.maxRange(), 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.fillStyle = '#40C040';
         ctx.fill();
@@ -60,17 +59,16 @@ function getElementByCoords(relX, relY) {
             return cap;
         }
     }
-    
     return null;
 }
 
 // initialization
-$(document).ready(function() {
+$(document).ready(function () {
     $canvas = $('#c'); // canvas
     ctx = $canvas[0].getContext('2d');
 
     // move
-    $canvas.mousedown(function(e) {
+    $canvas.mousedown(function (e) {
         var parentOffset = $(this).offset();
         var relX = e.pageX - parentOffset.left;
         var relY = e.pageY - parentOffset.top;
@@ -79,7 +77,7 @@ $(document).ready(function() {
             redraw();
         }
     });
-    $canvas.mouseup(function(e) {
+    $canvas.mouseup(function (e) {
         if (ongoing == "move") {
             cap.x = capPreview.x;
             cap.y = capPreview.y;
@@ -87,17 +85,16 @@ $(document).ready(function() {
             redraw();
         }
     });
-    $canvas.mousemove(function(e) {
+    $canvas.mousemove(function (e) {
         if (ongoing == "move") {
             var parentOffset = $(this).offset();
             var relX = e.pageX - parentOffset.left;
             var relY = e.pageY - parentOffset.top;
 
-            if (euclideanDistance(cap.x, cap.y, relX, relY) < getCapMaxRange(cap)) {
+            if (euclideanDistance(cap.x, cap.y, relX, relY) < cap.maxRange()) {
                 capPreview.x = relX;
                 capPreview.y = relY;
             }
-            
             redraw();
         }
     });
