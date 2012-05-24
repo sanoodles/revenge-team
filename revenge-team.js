@@ -29,16 +29,16 @@ var ball = {
     poss: null // cap that possess the ball
 }
 
+
+
+
+
 function isCapOverTheBall(cap) {
     return euclideanDistance(cap.x, cap.y, ball.x, ball.y) <= CAP_RADIO;
 }
 
 function setPossession(cap) {
     ball.poss = cap;
-}
-
-function euclideanDistance(x_0, y_0, x, y) {
-    return Math.sqrt(Math.pow(x - x_0, 2) + Math.pow(y - y_0, 2));
 }
 
 function redraw() {
@@ -72,7 +72,7 @@ function redraw() {
         ctx.beginPath();
         ctx.arc(capPreview.x, capPreview.y, CAP_RADIO, 0, Math.PI * 2, true);
         ctx.closePath();
-        ctx.fillStyle = '#004848';
+        ctx.fillStyle = '#0000FF';
         ctx.fill();
     }
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
             redraw();
         }
     });
-    $canvas.mouseup(function (e) {
+    $(document).mouseup(function (e) {
         if (ongoing == "move") {
             cap.x = capPreview.x;
             cap.y = capPreview.y;
@@ -133,16 +133,40 @@ $(document).ready(function () {
             redraw();
         }
     });
-    $canvas.mousemove(function (e) {
+    $(document).mousemove(function (e) {
         if (ongoing == "move") {
-            var parentOffset = $(this).offset();
-            var relX = e.pageX - parentOffset.left;
-            var relY = e.pageY - parentOffset.top;
-
-            if (euclideanDistance(cap.x, cap.y, relX, relY) < cap.maxRange()) {
-                capPreview.x = relX;
-                capPreview.y = relY;
+  
+            var canvasOffset = $canvas.offset();
+            var mouseX = e.pageX - canvasOffset.left;
+            var mouseY = e.pageY - canvasOffset.top;
+            var mouseXDiff = mouseX - cap.x;
+            var mouseYDiff = mouseY - cap.y;
+            var ang = angle(cap, {x: mouseX, y: mouseY});
+            var maxXDiff = cap.maxRange() * Math.sin(ang);
+            var maxYDiff = -1 * cap.maxRange() * Math.cos(ang);
+            var XDiff;
+            var YDiff;
+            
+            // moving right
+            if (mouseXDiff >= 0) {
+                XDiff = Math.min(mouseXDiff, maxXDiff);
+                capPreview.x = Math.min(cap.x + XDiff, FIELD_MARGIN_H + FIELD_WIDTH);
+            // moving left    
+            } else {
+                XDiff = Math.max(mouseXDiff, maxXDiff);
+                capPreview.x = Math.max(cap.x + XDiff, FIELD_MARGIN_H);
             }
+
+            // moving down
+            if (mouseYDiff >= 0) {
+                YDiff = Math.min(mouseYDiff, maxYDiff);
+                capPreview.y = Math.min(cap.y + YDiff, FIELD_MARGIN_V + FIELD_HEIGHT);
+            // moving up
+            } else {
+                YDiff = Math.max(mouseYDiff, maxYDiff);
+                capPreview.y = Math.max(cap.y + YDiff, FIELD_MARGIN_V);                
+            }
+            
             redraw();
         }
     });
