@@ -1,6 +1,7 @@
 var ongoing = "";
 var $canvas;
-var ctx; // context. not a clue of what actually is.
+var ctx; // context of the canvas
+var $capmenu;
 
 const FIELD_HEIGHT = 480;
 const FIELD_WIDTH = FIELD_HEIGHT * 1.4;
@@ -8,6 +9,7 @@ const FIELD_MARGIN_H = 20;
 const FIELD_MARGIN_V = 20;
 const CAP_RADIO = 12;
 const BALL_RADIO = 6;
+const IS_DEBUG_MODE = false;
 
 var cap = {
     x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
@@ -33,6 +35,12 @@ var ball = {
 
 
 
+function debug(v) {
+    if (IS_DEBUG_MODE) {
+        console.log(v + ", " + ongoing);
+    }
+}
+
 function isCapOverTheBall(cap) {
     return euclideanDistance(cap.x, cap.y, ball.x, ball.y) <= CAP_RADIO;
 }
@@ -52,7 +60,7 @@ function redraw() {
     ctx.fill();
 
     // range radio
-    if (ongoing == "move") {
+    if (ongoing == "start move" || ongoing == "moved") {
         ctx.beginPath();
         ctx.arc(cap.x, cap.y, cap.maxRange(), 0, Math.PI * 2, true);
         ctx.closePath();
@@ -68,7 +76,7 @@ function redraw() {
     ctx.fill();
 
     // cap preview
-    if (ongoing == "move") {
+    if (ongoing == "start move" || ongoing == "moved") {
         ctx.beginPath();
         ctx.arc(capPreview.x, capPreview.y, CAP_RADIO, 0, Math.PI * 2, true);
         ctx.closePath();
@@ -100,41 +108,53 @@ function getElementByCoords(relX, relY) {
 
 // initialization
 $(document).ready(function () {
-    $canvas = $('#c'); // canvas
+    
+    $canvas = $('#c');
     ctx = $canvas[0].getContext('2d');
-
+    $capmenu = $("#cap-menu");
+    
     // field size
     $canvas.attr({
         width: FIELD_MARGIN_H + FIELD_WIDTH + FIELD_MARGIN_H,
         height: FIELD_MARGIN_V + FIELD_HEIGHT + FIELD_MARGIN_V
     });
 
-    // move
+    // cap menu
+    $capmenu.hide();
     $canvas.mousedown(function (e) {
+        debug("canvas mousedown");
+
+        // hide cap menu
+        if (ongoing === "cap menu choose") {
+            $capmenu.hide();
+        }
+        
         var parentOffset = $(this).offset();
         var relX = e.pageX - parentOffset.left;
         var relY = e.pageY - parentOffset.top;
-        if (getElementByCoords(relX, relY)) {
-            ongoing = "move";
-            redraw();
+
+        // show cap menu
+        if (getElementByCoords(relX, relY) !== null) {
+            $capmenu.css({left: relX, top: relY}).show();
+            ongoing = "cap menu choose";
         }
     });
-    $(document).mouseup(function (e) {
-        if (ongoing == "move") {
-            cap.x = capPreview.x;
-            cap.y = capPreview.y;
-            ongoing = "";
-
-            // set possession
-            if (isCapOverTheBall(cap)) {
-                setPossession(cap);
-            }
-            
+    $capmenu.mousedown(function (e) {
+        debug("capmenu mousedown");
+        ongoing = "cap menu click";
+    });
+    $capmenu.mouseup(function (e) {
+        debug("capmenu mouseup");
+        if (ongoing === "cap menu click") {
+            ongoing = "start move";
+            $capmenu.hide();
             redraw();
         }
     });
     $(document).mousemove(function (e) {
-        if (ongoing == "move") {
+        debug("document mousemove");
+        
+        if (ongoing == "start move" || ongoing == "moved") {
   
             var canvasOffset = $canvas.offset();
             var mouseX = e.pageX - canvasOffset.left;
@@ -165,6 +185,25 @@ $(document).ready(function () {
             } else {
                 YDiff = Math.max(mouseYDiff, maxYDiff);
                 capPreview.y = Math.max(cap.y + YDiff, FIELD_MARGIN_V);                
+            }
+            
+            redraw();
+
+            ongoing = "moved";
+        }
+    });
+    $(document).mouseup(function (e) {
+        debug("document mouseup");
+
+        // change cap position
+        if (ongoing == "moved") {
+            cap.x = capPreview.x;
+            cap.y = capPreview.y;
+            ongoing = "";
+
+            // set possession
+            if (isCapOverTheBall(cap)) {
+                setPossession(cap);
             }
             
             redraw();
