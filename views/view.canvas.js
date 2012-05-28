@@ -48,11 +48,31 @@ var canvas = {
 
         // ball preview
         if (ongoing === "start pass" || ongoing === "passing") {
+
+            // pass cone
+            ctx.beginPath();
+            var a = angle(
+                        {x: cap.x, y: cap.y},
+                        {x: ballPreview.x, y: ballPreview.y}
+            );
+            var aerr = 0.1 * 20 / cap.talent; // angle error
+            var p1 = {x: cap.x, y: cap.y};
+            var p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
+            var p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.closePath();
+            ctx.fillStyle = '#00F000';
+            ctx.fill();
+
+            // ghost ball
             ctx.beginPath();
             ctx.arc(ballPreview.x, ballPreview.y, BALL_RADIO, 0, Math.PI * 2, true);
             ctx.closePath();
             ctx.fillStyle = '#FFFFFF';
             ctx.fill();
+
         }
 
     }

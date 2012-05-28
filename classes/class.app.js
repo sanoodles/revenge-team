@@ -4,7 +4,7 @@ var ctx; // context of the canvas
 var $capmenu;
 
 const BALL_RADIO = 6;
-const IS_DEBUG_MODE = true;
+const IS_DEBUG_MODE = false;
 
 var ball = {
     x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
