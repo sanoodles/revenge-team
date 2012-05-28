@@ -55,7 +55,13 @@ var canvas = {
                         {x: cap.x, y: cap.y},
                         {x: ballPreview.x, y: ballPreview.y}
             );
-            var aerr = 0.1 * 20 / cap.talent; // angle error
+            /*
+             * aerr angle error
+             * We add 2 to cap.talent to avoid concave angles for
+             * very low cap.talent values. Also, adding at least 1 is
+             * needed to avoid division by zero.
+             */
+            var aerr = 0.1 * 20 / (2 + cap.talent); 
             var p1 = {x: cap.x, y: cap.y};
             var p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
             var p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);

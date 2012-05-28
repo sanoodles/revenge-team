@@ -4,7 +4,7 @@ var cap = {
     x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
     y: FIELD_MARGIN_V + Math.random() * FIELD_HEIGHT,
     speed: 40, // on steroids just for debug
-    talent: 10,
+    talent: 1,
     maxRange: function () {
         return this.speed * 4;
     },
