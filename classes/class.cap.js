@@ -3,8 +3,9 @@ const CAP_RADIO = 12;
 var cap = {
     x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
     y: FIELD_MARGIN_V + Math.random() * FIELD_HEIGHT,
-    speed: 40, // on steroids just for debug
-    talent: 1,
+    speed: 40, // on steroids just for debugging purposes
+    talent: 5,
+    pass: 15,
     maxRange: function () {
         return this.speed * 4;
     },

@@ -49,8 +49,11 @@ var canvas = {
         // ball preview
         if (ongoing === "start pass" || ongoing === "passing") {
 
-            // pass cone
-            ctx.beginPath();
+            /**
+             * @section PassCone
+             * 1. Red cone
+             * 2. Green cone
+             */
             var a = angle(
                         {x: cap.x, y: cap.y},
                         {x: ballPreview.x, y: ballPreview.y}
@@ -62,9 +65,28 @@ var canvas = {
              * needed to avoid division by zero.
              */
             var aerr = 0.1 * 20 / (2 + cap.talent); 
+
+            /*
+             * 1. Red cone
+             */
             var p1 = {x: cap.x, y: cap.y};
             var p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
             var p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.closePath();
+            ctx.fillStyle = '#F00000';
+            ctx.fill();
+
+            /*
+             * 2. Green cone
+             */
+            p1 = {x: cap.x, y: cap.y};
+            p2 = getPointAt(p1, cap.pass * 20, a - aerr);
+            p3 = getPointAt(p1, cap.pass * 20, a + aerr);
+            ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.lineTo(p3.x, p3.y);
