@@ -26,7 +26,7 @@ var canvas = {
         ctx.fillStyle = '#000090';
         ctx.fill();
 
-        // cap preview
+        // move preview
         if (ongoing === "start move" || ongoing === "moving") {
             ctx.beginPath();
             ctx.arc(capPreview.x, capPreview.y, CAP_RADIO, 0, Math.PI * 2, true);
@@ -46,7 +46,7 @@ var canvas = {
         ctx.fillStyle = '#F0F0F0';
         ctx.fill();
 
-        // ball preview
+        // pass preview
         if (ongoing === "start pass" || ongoing === "passing") {
 
             /**
@@ -94,7 +94,9 @@ var canvas = {
             ctx.fillStyle = '#00F000';
             ctx.fill();
 
-            // ghost ball
+            /**
+             * @section BallPreview
+             */
             ctx.beginPath();
             ctx.arc(ballPreview.x, ballPreview.y, BALL_RADIO, 0, Math.PI * 2, true);
             ctx.closePath();
