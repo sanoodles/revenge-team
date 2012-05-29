@@ -6,8 +6,11 @@ var cap = {
     speed: 40, // on steroids just for debugging purposes
     talent: 5,
     pass: 15,
-    maxRange: function () {
+    moveRange: function () {
         return this.speed * 4;
+    },
+    passRange: function () {
+        return this.pass * 20;
     },
     setPossession: function () {
         ball.poss = this;

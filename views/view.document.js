@@ -35,8 +35,8 @@ function documentInit () {
 
             case "start move":
             case "moving":
-                var maxXDiff = cap.maxRange() * Math.sin(ang);
-                var maxYDiff = -1 * cap.maxRange() * Math.cos(ang);
+                var maxXDiff = cap.moveRange() * Math.sin(ang);
+                var maxYDiff = -1 * cap.moveRange() * Math.cos(ang);
                 var XDiff;
                 var YDiff;
 
@@ -75,7 +75,7 @@ function documentInit () {
                 ballPreview.x = Math.max(ballPreview.x, FIELD_MARGIN_H);
                 ballPreview.y = Math.min(mouseY, FIELD_MARGIN_V + FIELD_HEIGHT);
                 ballPreview.y = Math.max(ballPreview.y, FIELD_MARGIN_V);
-                
+
                 canvas.redraw();
 
                 ongoing = "passing";
@@ -90,7 +90,7 @@ function documentInit () {
 
         // change cap position
         switch (ongoing) {
-            
+
             case "moving":
                 cap.x = capPreview.x;
                 cap.y = capPreview.y;
@@ -103,10 +103,19 @@ function documentInit () {
 
                 canvas.redraw();
                 break;
-                
+
             case "passing":
-                ball.x = ballPreview.x;
-                ball.y = ballPreview.y;
+
+                // pass to green zone
+                if (euclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) < cap.passRange()) {
+                    ball.x = ballPreview.x;
+                    ball.y = ballPreview.y;
+
+                // pass to red zone
+                } else {
+                    ball.x = ballPreview.x + Math.random() * 20 - 10;
+                    ball.y = ballPreview.y + Math.random() * 20 - 10;
+                }
                 ongoing = "";
 
                 ball.poss = null;

@@ -13,7 +13,7 @@ var canvas = {
         // range radio
         if (ongoing === "start move" || ongoing === "moving") {
             ctx.beginPath();
-            ctx.arc(cap.x, cap.y, cap.maxRange(), 0, Math.PI * 2, true);
+            ctx.arc(cap.x, cap.y, cap.moveRange(), 0, Math.PI * 2, true);
             ctx.closePath();
             ctx.fillStyle = '#40C040';
             ctx.fill();
@@ -84,8 +84,8 @@ var canvas = {
              * 2. Green cone
              */
             p1 = {x: cap.x, y: cap.y};
-            p2 = getPointAt(p1, cap.pass * 20, a - aerr);
-            p3 = getPointAt(p1, cap.pass * 20, a + aerr);
+            p2 = getPointAt(p1, cap.passRange(), a - aerr);
+            p3 = getPointAt(p1, cap.passRange(), a + aerr);
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
