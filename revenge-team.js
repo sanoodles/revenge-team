@@ -1,0 +1,4 @@
+var RevengeTeam = {
+    class: {},
+    view: {}
+};
