@@ -1,22 +1,33 @@
+/**
+ * Acts as input channel
+ *
+ * Writes
+ *  ongoing.what
+ *  ongoing.who
+ */
+
 function documentInit () {
 
     $(document).mousedown(function (e) {
         debug("document mousedown");
 
-        // hide cap menu
-        if (ongoing === "cap menu choose") {
-            capmenu.hide();
-        }
-
         var offset = $("#c").offset();
         var relX = e.pageX - offset.left;
         var relY = e.pageY - offset.top;
+        var cap;
+
+        // hide cap menu
+        if (ongoing.what === "cap menu choose") {
+            capmenu.hide();
+        }
 
         // show cap menu
-        if (app.getElementByCoords(relX, relY) !== null) {
-            if (ongoing === "") {
+        cap = app.getElementByCoords(relX, relY);
+        if (cap instanceof Cap) {
+            if (ongoing.what === "") {
                 capmenu.show(relX, relY, ball.poss !== null);
-                ongoing = "cap menu choose";
+                ongoing.what = "cap menu choose";
+                ongoing.who = cap;
             }
         }
     });
@@ -27,42 +38,42 @@ function documentInit () {
         var fieldOffset = $field.offset();
         var mouseX = e.pageX - fieldOffset.left;
         var mouseY = e.pageY - fieldOffset.top;
-        var mouseXDiff = mouseX - cap.x;
-        var mouseYDiff = mouseY - cap.y;
-        var ang = angle(cap, {x: mouseX, y: mouseY});
 
-        switch (ongoing) {
+        switch (ongoing.what) {
 
             case "start move":
             case "moving":
-                var maxXDiff = cap.moveRange() * Math.sin(ang);
-                var maxYDiff = -1 * cap.moveRange() * Math.cos(ang);
+                var mouseXDiff = mouseX - ongoing.who.x;
+                var mouseYDiff = mouseY - ongoing.who.y;
+                var ang = getAngle(ongoing.who, {x: mouseX, y: mouseY});
+                var maxXDiff = ongoing.who.getMoveRange() * Math.sin(ang);
+                var maxYDiff = -1 * ongoing.who.getMoveRange() * Math.cos(ang);
                 var XDiff;
                 var YDiff;
 
                 // moving right
                 if (mouseXDiff >= 0) {
                     XDiff = Math.min(mouseXDiff, maxXDiff);
-                    capPreview.x = Math.min(cap.x + XDiff, FIELD_MARGIN_H + FIELD_WIDTH);
+                    capPreview.x = Math.min(ongoing.who.x + XDiff, FIELD_MARGIN_H + FIELD_WIDTH);
                 // moving left
                 } else {
                     XDiff = Math.max(mouseXDiff, maxXDiff);
-                    capPreview.x = Math.max(cap.x + XDiff, FIELD_MARGIN_H);
+                    capPreview.x = Math.max(ongoing.who.x + XDiff, FIELD_MARGIN_H);
                 }
 
                 // moving down
                 if (mouseYDiff >= 0) {
                     YDiff = Math.min(mouseYDiff, maxYDiff);
-                    capPreview.y = Math.min(cap.y + YDiff, FIELD_MARGIN_V + FIELD_HEIGHT);
+                    capPreview.y = Math.min(ongoing.who.y + YDiff, FIELD_MARGIN_V + FIELD_HEIGHT);
                 // moving up
                 } else {
                     YDiff = Math.max(mouseYDiff, maxYDiff);
-                    capPreview.y = Math.max(cap.y + YDiff, FIELD_MARGIN_V);
+                    capPreview.y = Math.max(ongoing.who.y + YDiff, FIELD_MARGIN_V);
                 }
 
                 canvas.redraw();
 
-                ongoing = "moving";
+                ongoing.what = "moving";
 
                 break;
 
@@ -78,7 +89,7 @@ function documentInit () {
 
                 canvas.redraw();
 
-                ongoing = "passing";
+                ongoing.what = "passing";
                 break;
 
         }
@@ -88,17 +99,18 @@ function documentInit () {
     $(document).mouseup(function (e) {
         debug("document mouseup");
 
+        var cap;
+
         // change cap position
-        switch (ongoing) {
+        switch (ongoing.what) {
 
             case "moving":
-                cap.x = capPreview.x;
-                cap.y = capPreview.y;
-                ongoing = "";
+                ongoing.who.setPosition(capPreview.x, capPreview.y);
+                ongoing.what = "";
 
                 // set possession
-                if (cap.isCapOverTheBall()) {
-                    ball.poss = cap;
+                if (ongoing.who.isCapOverTheBall()) {
+                    app.givePossession(ongoing.who);
                 }
 
                 canvas.redraw();
@@ -107,18 +119,24 @@ function documentInit () {
             case "passing":
 
                 // pass to green zone
-                if (euclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) < cap.passRange()) {
+                if (getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) < ongoing.who.getPassRange()) {
                     ball.x = ballPreview.x;
                     ball.y = ballPreview.y;
 
                 // pass to red zone
                 } else {
-                    ball.x = ballPreview.x + Math.random() * 20 - 10;
-                    ball.y = ballPreview.y + Math.random() * 20 - 10;
+                    ball.x = ballPreview.x + Math.random() * 100 - 50;
+                    ball.y = ballPreview.y + Math.random() * 100 - 50;
                 }
-                ongoing = "";
+                ongoing.what = "";
 
-                ball.poss = null;
+                // arrived to other cap
+                cap = app.getElementByCoords(ball.x, ball.y);
+                if (cap instanceof Cap) {
+                    app.givePossession(cap);
+                } else {
+                    app.clearPossession();
+                }
 
                 canvas.redraw();
                 break;
