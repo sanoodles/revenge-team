@@ -1,4 +1,0 @@
-var RevengeTeam = {
-    class: {},
-    view: {}
-};

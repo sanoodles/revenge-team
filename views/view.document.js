@@ -6,6 +6,9 @@
  *  ongoing.who
  */
 
+/**
+ * Define input events handlers
+ */
 function documentInit () {
 
     $(document).mousedown(function (e) {
@@ -99,8 +102,9 @@ function documentInit () {
     $(document).mouseup(function (e) {
         debug("document mouseup");
 
+        var passDistance;
         var cap;
-
+        
         // change cap position
         switch (ongoing.what) {
 
@@ -118,15 +122,17 @@ function documentInit () {
 
             case "passing":
 
+                distanceInRedZone = getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) - ongoing.who.getPassRange();
+
                 // pass to green zone
-                if (getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) < ongoing.who.getPassRange()) {
+                if (distanceInRedZone <= 0) {
                     ball.x = ballPreview.x;
                     ball.y = ballPreview.y;
 
                 // pass to red zone
                 } else {
-                    ball.x = ballPreview.x + Math.random() * 100 - 50;
-                    ball.y = ballPreview.y + Math.random() * 100 - 50;
+                    ball.x = ballPreview.x + Math.random() * distanceInRedZone - distanceInRedZone / 2;
+                    ball.y = ballPreview.y + Math.random() * distanceInRedZone - distanceInRedZone / 2;
                 }
                 ongoing.what = "";
 
@@ -144,18 +150,3 @@ function documentInit () {
     });
 
 }
-
-$(document).ready(function () {
-
-    field.init();
-    capmenu.init();
-    documentInit();
-
-    $field = $(field.el);
-    ctx = field.el.getContext('2d');
-    $capmenu = $(capmenu.el);
-
-    capmenu.hide();
-
-    canvas.redraw();
-});

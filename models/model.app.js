@@ -1,9 +1,10 @@
+const IS_DEBUG_MODE = false;
+
 var ongoing = {what: "", who: null};
 var $field; // currently canvas == field
 var ctx; // context of the canvas
 var $capmenu;
-
-const IS_DEBUG_MODE = false;
+var caps = [];
 
 function debug(v) {
     if (IS_DEBUG_MODE) {
@@ -34,7 +35,3 @@ var app = {
     }
 }
 
-var caps = [];
-for (var i = 0, max = 2; i < max; i++) {
-    caps[i] = new Cap(i);
-}

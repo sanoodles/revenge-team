@@ -1,14 +1,15 @@
 var capmenu = {
-    
-    el: null,
-    
+    el: null,    
     init: function () {
+        
         this.el = $("#cap-menu")[0];
         this.el.selectedIndex = 0; // otherwise a blank option appears
+        
         $(this.el).mousedown(function (e) {
             debug("capmenu mousedown");
             ongoing.what = "cap menu click";
         });
+        
         $(this.el).mouseup(function (e) {
             debug("capmenu mouseup");
             if (ongoing.what === "cap menu click") {
@@ -32,6 +33,7 @@ var capmenu = {
                 }
             }
         });
+        
     },
     
     show: function (relX, relY, isPassVisible) {

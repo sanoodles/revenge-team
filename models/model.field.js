@@ -15,8 +15,5 @@ var field = {
             width: FIELD_MARGIN_H + FIELD_WIDTH + FIELD_MARGIN_H,
             height: FIELD_MARGIN_V + FIELD_HEIGHT + FIELD_MARGIN_V
         });
-
-        
     }
-
 }
