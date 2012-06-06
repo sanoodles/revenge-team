@@ -102,8 +102,9 @@ function documentInit () {
     $(document).mouseup(function (e) {
         debug("document mouseup");
 
-        var passDistance;
-        var cap;
+        var distanceInRedZone
+        ,   randomFactor
+        ,   cap;
         
         // change cap position
         switch (ongoing.what) {
@@ -131,8 +132,9 @@ function documentInit () {
 
                 // pass to red zone
                 } else {
-                    ball.x = ballPreview.x + Math.random() * distanceInRedZone - distanceInRedZone / 2;
-                    ball.y = ballPreview.y + Math.random() * distanceInRedZone - distanceInRedZone / 2;
+                    randomFactor = distanceInRedZone + CAP_RADIO * 2;
+                    ball.x = ballPreview.x + Math.random() * (randomFactor - randomFactor / 2);
+                    ball.y = ballPreview.y + Math.random() * (randomFactor - randomFactor / 2);
                 }
                 ongoing.what = "";
 

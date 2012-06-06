@@ -1,10 +1,10 @@
 const IS_DEBUG_MODE = false;
 
-var ongoing = {what: "", who: null};
-var $field; // currently canvas == field
-var ctx; // context of the canvas
-var $capmenu;
-var caps = [];
+var ongoing = {what: "", who: null}
+,   $field // currently canvas == field
+,   ctx // context of the canvas
+,   $capmenu
+,   caps = [];
 
 function debug(v) {
     if (IS_DEBUG_MODE) {
@@ -12,6 +12,9 @@ function debug(v) {
     }
 }
 
+/**
+ * @singleton
+ */
 var app = {
     getElementByCoords: function (x, y) {
         var cap;
@@ -25,6 +28,12 @@ var app = {
         }
         return null;
     },
+
+    /*
+     * In terms of conceptual scope, Possession > Ball and
+     * Possession > Cap. That's why possession responsibilties
+     * are assigned to the "app" object; not to "ball" nor "cap".
+     */
     givePossession: function (cap) {
         ball.poss = cap;
         ball.x = cap.x;
@@ -33,5 +42,4 @@ var app = {
     clearPossession: function () {
         ball.poss = null;
     }
-}
-
+};

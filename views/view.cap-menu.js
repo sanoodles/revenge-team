@@ -55,4 +55,4 @@ var capmenu = {
     hide: function () {
         $capmenu.hide();
     }
-}
+};

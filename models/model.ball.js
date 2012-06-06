@@ -1,5 +1,8 @@
 const BALL_RADIO = 6;
 
+/**
+ * @singleton
+ */
 var ball = {
     
     x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
@@ -10,9 +13,12 @@ var ball = {
         this.x = x;
         this.y = y;
     }
-}
+};
 
+/**
+ * @singleton
+ */
 var ballPreview = {
     x: null,
     y: null
-}
+};

@@ -4,10 +4,13 @@
  * Reads
  *  ongoing.what
  *  ongoing.who
+ *
+ * @see http://en.wikipedia.org/wiki/Circle#Terminology
  */
 
 var canvas = {
 
+    // helper for redraw
     drawTriangle: function (p1, p2, p3, fillStyle) {
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
@@ -18,9 +21,21 @@ var canvas = {
         ctx.fill();
     },
 
+    // helper for redraw
+    drawSector: function (x, y, radio, startAngle, endAngle, fillStyle) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, radio, startAngle - Math.PI / 2, endAngle - Math.PI / 2, false);
+        ctx.lineTo(x, y);
+        ctx.closePath();
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+    },
+
+    // helper for redraw
     drawCircle: function (x, y, radio, fillStyle) {
         ctx.beginPath();
-        ctx.arc(x, y, radio, 0, Math.PI * 2, true);
+        ctx.arc(x, y, radio, 0, Math.PI * 2, false);
         ctx.closePath();
         ctx.fillStyle = fillStyle;
         ctx.fill();
@@ -56,17 +71,21 @@ var canvas = {
              */
             var aerr = 0.1 * 20 / (2 + ongoing.who.talent);
 
-            // Red cone
+            // Red cone. Actually a triangle wider than the field.
             var p1 = {x: ongoing.who.x, y: ongoing.who.y};
             var p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
             var p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
             this.drawTriangle(p1, p2, p3, '#F00000');
 
-            // Green cone
-            p1 = {x: ongoing.who.x, y: ongoing.who.y};
-            p2 = getPointAt(p1, ongoing.who.getPassRange(), a - aerr);
-            p3 = getPointAt(p1, ongoing.who.getPassRange(), a + aerr);
-            this.drawTriangle(p1, p2, p3, '#00F000');
+            // Green cone. Actually a circle sector.
+            this.drawSector(
+                    ongoing.who.x,
+                    ongoing.who.y,
+                    ongoing.who.getPassRange(),
+                    a - aerr,
+                    a + aerr,
+                    '#00F000'
+            );
         }
 
         // cap
@@ -91,4 +110,4 @@ var canvas = {
 
     } // redraw
 
-} // canvas
+}; // canvas

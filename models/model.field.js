@@ -3,6 +3,9 @@ const FIELD_WIDTH = FIELD_HEIGHT * 1.4;
 const FIELD_MARGIN_H = 20;
 const FIELD_MARGIN_V = 20;
 
+/**
+ * @singleton
+ */
 var field = {
     
     el: null,
@@ -16,4 +19,4 @@ var field = {
             height: FIELD_MARGIN_V + FIELD_HEIGHT + FIELD_MARGIN_V
         });
     }
-}
+};
