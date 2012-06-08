@@ -16,18 +16,6 @@ function debug(v) {
  * @singleton
  */
 var app = {
-    getElementByCoords: function (x, y) {
-        var cap;
-        for (var i = 0, max = caps.length; i < max; i++) {
-            cap = caps[i];
-            if (cap.x > x - CAP_RADIO && cap.x < x + CAP_RADIO) {
-                if (cap.y > y - CAP_RADIO && cap.y < y + CAP_RADIO) {
-                    return cap;
-                }
-            }
-        }
-        return null;
-    },
 
     /*
      * In terms of conceptual scope, Possession > Ball and

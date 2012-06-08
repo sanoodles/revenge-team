@@ -25,7 +25,7 @@ function documentInit () {
         }
 
         // show cap menu
-        cap = app.getElementByCoords(relX, relY);
+        cap = field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (ongoing.what === "") {
                 capmenu.show(relX, relY, ball.poss !== null);
@@ -53,6 +53,11 @@ function documentInit () {
                 var maxYDiff = -1 * ongoing.who.getMoveRange() * Math.cos(ang);
                 var XDiff;
                 var YDiff;
+
+                // if already a cap on that position
+                if (!field.canPutCapOnCoords(ongoing.who, mouseX, mouseY)) {
+                    break;
+                }
 
                 // moving right
                 if (mouseXDiff >= 0) {
@@ -139,7 +144,7 @@ function documentInit () {
                 ongoing.what = "";
 
                 // arrived to other cap
-                cap = app.getElementByCoords(ball.x, ball.y);
+                cap = field.getElementByCoords(ball.x, ball.y);
                 if (cap instanceof Cap) {
                     app.givePossession(cap);
                 } else {
