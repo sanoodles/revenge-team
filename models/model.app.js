@@ -1,10 +1,9 @@
-const IS_DEBUG_MODE = false;
-
-var ongoing = {what: "", who: null}
-,   $field // currently canvas == field
-,   ctx // context of the canvas
-,   $capmenu
-,   caps = [];
+var IS_DEBUG_MODE = false,
+    ongoing = {what: "", who: null},
+    $field, // currently canvas == field
+    ctx, // context of the canvas
+    $capmenu,
+    caps = [];
 
 function debug(v) {
     if (IS_DEBUG_MODE) {

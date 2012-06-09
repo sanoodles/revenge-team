@@ -42,7 +42,7 @@ var canvas = {
     },
 
     redraw: function () {
-        var i, max;
+        var i, max, a, aerr, p1, p2, p3;
 
         // field
         ctx.beginPath();
@@ -59,9 +59,9 @@ var canvas = {
 
         // pass preview
         if (ongoing.what === "start pass" || ongoing.what === "passing") {
-            var a = getAngle(
-                        {x: ongoing.who.x, y: ongoing.who.y},
-                        {x: ballPreview.x, y: ballPreview.y}
+            a = getAngle(
+                {x: ongoing.who.x, y: ongoing.who.y},
+                {x: ballPreview.x, y: ballPreview.y}
             );
             /*
              * aerr angle error
@@ -69,22 +69,22 @@ var canvas = {
              * very low cap.talent values. Also, adding at least 1 is
              * needed to avoid division by zero.
              */
-            var aerr = 0.1 * 20 / (2 + ongoing.who.talent);
+            aerr = 0.1 * 20 / (2 + ongoing.who.talent);
 
             // Red cone. Actually a triangle wider than the field.
-            var p1 = {x: ongoing.who.x, y: ongoing.who.y};
-            var p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
-            var p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
+            p1 = {x: ongoing.who.x, y: ongoing.who.y};
+            p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
+            p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
             this.drawTriangle(p1, p2, p3, '#F00000');
 
             // Green cone. Actually a circle sector.
             this.drawSector(
-                    ongoing.who.x,
-                    ongoing.who.y,
-                    ongoing.who.getPassRange(),
-                    a - aerr,
-                    a + aerr,
-                    '#00F000'
+                ongoing.who.x,
+                ongoing.who.y,
+                ongoing.who.getPassRange(),
+                a - aerr,
+                a + aerr,
+                '#00F000'
             );
         }
 

@@ -1,6 +1,6 @@
-const CAP_RADIO = 12;
+var CAP_RADIO = 12;
 
-function GenericCap () {
+function GenericCap() {
     this.getMoveRange = function () {
         return this.speed * 4;
     };
@@ -22,7 +22,7 @@ function GenericCap () {
     };
 }
 
-function Cap (id) {
+function Cap(id) {
     this.id = id;
     this.x = FIELD_MARGIN_H + Math.random() * FIELD_WIDTH;
     this.y = FIELD_MARGIN_V + Math.random() * FIELD_HEIGHT;
