@@ -1,3 +1,10 @@
+/**
+ * Also acts as input channel.
+ *
+ * Writes
+ *  ongoing.what
+ *  ongoing.who
+ */
 var capmenu = {
     el: null,
     init: function () {
