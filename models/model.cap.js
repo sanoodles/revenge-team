@@ -1,6 +1,6 @@
-var CAP_RADIO = 12;
 
 function GenericCap() {
+    this.radio = 12,
     this.getMoveRange = function () {
         return this.speed * 4;
     };
@@ -8,7 +8,7 @@ function GenericCap() {
         return this.pass * 20;
     };
     this.isCapOverTheBall = function () {
-        return getEuclideanDistance(this.x, this.y, ball.x, ball.y) <= CAP_RADIO;
+        return getEuclideanDistance(this.x, this.y, ball.x, ball.y) <= this.radio;
     };
     this.hasBall = function () {
         return ball.poss === this;
@@ -21,14 +21,17 @@ function GenericCap() {
         }
     };
 }
+GenericCap.TEAM_LOCAL = 0;
+GenericCap.TEAM_VISITOR = 1;
 
-function Cap(id) {
+function Cap(id, team) {
     this.id = id;
-    this.x = FIELD_MARGIN_H + Math.random() * FIELD_WIDTH;
-    this.y = FIELD_MARGIN_V + Math.random() * FIELD_HEIGHT;
+    this.x = field.marginH + Math.random() * field.width;
+    this.y = field.marginV + Math.random() * field.height;
     this.speed = 40; // on steroids just for debugging purposes
     this.talent = 5;
     this.pass = 15;
+    this.team = 0;
 }
 Cap.prototype = new GenericCap();
 

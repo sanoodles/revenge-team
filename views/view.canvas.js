@@ -47,8 +47,8 @@ var canvas = {
         // field
         ctx.beginPath();
         ctx.rect(0, 0,
-                FIELD_MARGIN_H + FIELD_WIDTH + FIELD_MARGIN_H,
-                FIELD_MARGIN_V + FIELD_HEIGHT + FIELD_MARGIN_V);
+                field.marginH + field.width + field.marginH,
+                field.marginV + field.height + field.marginV);
         ctx.fillStyle = '#009000';
         ctx.fill();
 
@@ -73,8 +73,8 @@ var canvas = {
 
             // Red cone. Actually a triangle wider than the field.
             p1 = {x: ongoing.who.x, y: ongoing.who.y};
-            p2 = getPointAt(p1, FIELD_WIDTH * 2, a - aerr);
-            p3 = getPointAt(p1, FIELD_WIDTH * 2, a + aerr);
+            p2 = getPointAt(p1, field.width * 2, a - aerr);
+            p3 = getPointAt(p1, field.width * 2, a + aerr);
             this.drawTriangle(p1, p2, p3, '#F00000');
 
             // Green cone. Actually a circle sector.
@@ -91,21 +91,21 @@ var canvas = {
         // cap
         for (i = 0, max = caps.length; i < max; i++) {
             ctx.beginPath();
-            this.drawCircle(caps[i].x, caps[i].y, CAP_RADIO, '#000090');
+            this.drawCircle(caps[i].x, caps[i].y, caps[i].radio, '#000090');
         }
 
         // cap move preview
         if (ongoing.what === "start move" || ongoing.what === "moving") {
-            this.drawCircle(capPreview.x, capPreview.y, CAP_RADIO, '#0000FF');
+            this.drawCircle(capPreview.x, capPreview.y, ongoing.who.radio, '#0000FF');
         }
 
         // ball
-        this.drawCircle(ball.x, ball.y, BALL_RADIO, '#F0F0F0');
+        this.drawCircle(ball.x, ball.y, ball.radio, '#F0F0F0');
 
         // Ball preview
         if (ongoing.what === "start pass" || ongoing.what === "passing") {
             ctx.beginPath();
-            this.drawCircle(ballPreview.x, ballPreview.y, BALL_RADIO, '#FFFFFF');
+            this.drawCircle(ballPreview.x, ballPreview.y, ball.radio, '#FFFFFF');
         }
 
     } // redraw

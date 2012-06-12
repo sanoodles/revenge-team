@@ -1,12 +1,12 @@
-var FIELD_HEIGHT = 480,
-    FIELD_WIDTH = FIELD_HEIGHT * 1.4,
-    FIELD_MARGIN_H = 20,
-    FIELD_MARGIN_V = 20;
-
 /**
  * @singleton
  */
 var field = {
+
+    height: 480,
+    width: 672, // 480 * 1.4
+    marginH: 20,
+    marginV: 20,
 
     el: null,
 
@@ -15,8 +15,8 @@ var field = {
 
         // field size
         $(this.el).attr({
-            width: FIELD_MARGIN_H + FIELD_WIDTH + FIELD_MARGIN_H,
-            height: FIELD_MARGIN_V + FIELD_HEIGHT + FIELD_MARGIN_V
+            width: field.marginH + field.width + field.marginH,
+            height: field.marginV + field.height + field.marginV
         });
     },
 
@@ -24,8 +24,8 @@ var field = {
         var cap, i, max;
         for (i = 0, max = caps.length; i < max; i++) {
             cap = caps[i];
-            if (cap.x > x - CAP_RADIO && cap.x < x + CAP_RADIO) {
-                if (cap.y > y - CAP_RADIO && cap.y < y + CAP_RADIO) {
+            if (cap.x > x - cap.radio && cap.x < x + cap.radio) {
+                if (cap.y > y - cap.radio && cap.y < y + cap.radio) {
                     return cap;
                 }
             }
@@ -41,7 +41,7 @@ var field = {
         for (i = 0, max = caps.length; i < max; i++) {
             icap = caps[i];
             if (cap !== icap) {
-                if (getEuclideanDistance(x, y, icap.x, icap.y) < CAP_RADIO * 2) {
+                if (getEuclideanDistance(x, y, icap.x, icap.y) < cap.radio * 2) {
                     return false;
                 }
             }

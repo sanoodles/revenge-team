@@ -1,24 +1,19 @@
-var BALL_RADIO = 6;
-
-/**
- * @singleton
- */
-var ball = {
-
-    x: FIELD_MARGIN_H + Math.random() * FIELD_WIDTH,
-    y: FIELD_MARGIN_V + Math.random() * FIELD_HEIGHT,
-    poss: null, // {Cap} cap that possess the ball
-
-    setPosition: function (x, y) {
+function AbstractBall() {
+    this.x = null;
+    this.y = null;
+    this.radio = 6;
+}
+ 
+function Ball(x, y) {
+    this.x = x;
+    this.y = y;
+    this.poss = null; // {Cap} cap that possess the ball
+    this.setPosition = function (x, y) {
         this.x = x;
         this.y = y;
     }
-};
+}
+Ball.prototype = new AbstractBall();
 
-/**
- * @singleton
- */
-var ballPreview = {
-    x: null,
-    y: null
-};
+function PreviewBall() {}
+PreviewBall.prototype = new AbstractBall();

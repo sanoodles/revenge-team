@@ -18,6 +18,11 @@ $(window).load(function () {
     for (var i = 0, max = 2; i < max; i++) {
         caps[i] = new Cap(i);
     }
+    ball = new Ball(
+            field.marginH + Math.random() * field.width,
+            field.marginV + Math.random() * field.height
+    );
+    ballPreview = new PreviewBall();
 
     // first screen paint
     canvas.redraw();
@@ -77,21 +82,21 @@ function documentInit() {
             // moving right
             if (mouseXDiff >= 0) {
                 XDiff = Math.min(mouseXDiff, maxXDiff);
-                capPreview.x = Math.min(ongoing.who.x + XDiff, FIELD_MARGIN_H + FIELD_WIDTH);
+                capPreview.x = Math.min(ongoing.who.x + XDiff, field.marginH + field.width);
             // moving left
             } else {
                 XDiff = Math.max(mouseXDiff, maxXDiff);
-                capPreview.x = Math.max(ongoing.who.x + XDiff, FIELD_MARGIN_H);
+                capPreview.x = Math.max(ongoing.who.x + XDiff, field.marginH);
             }
 
             // moving down
             if (mouseYDiff >= 0) {
                 YDiff = Math.min(mouseYDiff, maxYDiff);
-                capPreview.y = Math.min(ongoing.who.y + YDiff, FIELD_MARGIN_V + FIELD_HEIGHT);
+                capPreview.y = Math.min(ongoing.who.y + YDiff, field.marginV + field.height);
             // moving up
             } else {
                 YDiff = Math.max(mouseYDiff, maxYDiff);
-                capPreview.y = Math.max(ongoing.who.y + YDiff, FIELD_MARGIN_V);
+                capPreview.y = Math.max(ongoing.who.y + YDiff, field.marginV);
             }
 
             canvas.redraw();
@@ -105,10 +110,10 @@ function documentInit() {
             ballPreview.x = mouseX;
             ballPreview.y = mouseY;
 
-            ballPreview.x = Math.min(mouseX, FIELD_MARGIN_H + FIELD_WIDTH);
-            ballPreview.x = Math.max(ballPreview.x, FIELD_MARGIN_H);
-            ballPreview.y = Math.min(mouseY, FIELD_MARGIN_V + FIELD_HEIGHT);
-            ballPreview.y = Math.max(ballPreview.y, FIELD_MARGIN_V);
+            ballPreview.x = Math.min(mouseX, field.marginH + field.width);
+            ballPreview.x = Math.max(ballPreview.x, field.marginH);
+            ballPreview.y = Math.min(mouseY, field.marginV + field.height);
+            ballPreview.y = Math.max(ballPreview.y, field.marginV);
 
             canvas.redraw();
 
@@ -152,7 +157,7 @@ function documentInit() {
 
             // pass to red zone
             } else {
-                randomFactor = distanceInRedZone + CAP_RADIO * 2;
+                randomFactor = distanceInRedZone + ongoing.who.radio * 2;
                 ball.x = ballPreview.x + Math.random() * (randomFactor - randomFactor / 2);
                 ball.y = ballPreview.y + Math.random() * (randomFactor - randomFactor / 2);
             }

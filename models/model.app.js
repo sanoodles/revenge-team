@@ -3,7 +3,9 @@ var IS_DEBUG_MODE = false,
     $field, // currently canvas == field
     ctx, // context of the canvas
     $capmenu,
-    caps = [];
+    caps = [],
+    ball,
+    ballPreview;
 
 function debug(v) {
     if (IS_DEBUG_MODE) {
