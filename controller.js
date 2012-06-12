@@ -15,8 +15,11 @@ $(window).load(function () {
     $capmenu = $(capmenu.el);
     ctx = field.el.getContext('2d');
     capmenu.hide();
+    caps[0] = new Cap(0, Team.LOCAL);
+    caps[1] = new Cap(1, Team.LOCAL);
+    caps[2] = new Cap(2, Team.VISITOR);
     for (var i = 0, max = 2; i < max; i++) {
-        caps[i] = new Cap(i);
+        
     }
     ball = new Ball(
             field.marginH + Math.random() * field.width,

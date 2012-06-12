@@ -21,8 +21,6 @@ function GenericCap() {
         }
     };
 }
-GenericCap.TEAM_LOCAL = 0;
-GenericCap.TEAM_VISITOR = 1;
 
 function Cap(id, team) {
     this.id = id;
@@ -31,7 +29,7 @@ function Cap(id, team) {
     this.speed = 40; // on steroids just for debugging purposes
     this.talent = 5;
     this.pass = 15;
-    this.team = 0;
+    this.team = team;
 }
 Cap.prototype = new GenericCap();
 
