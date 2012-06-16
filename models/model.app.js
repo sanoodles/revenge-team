@@ -86,11 +86,11 @@ var app = {
             return Math.min(passRange, minRivalInPassConeDist);
         },
         
-        getDistanceInRedZone: function (a, aerr) {
+        getDistanceInRedZone: function () {
             var passDistance, greenZoneRadio;
             
             passDistance = getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y);
-            greenZoneRadio = this.getGreenZoneRadio(a, aerr);
+            greenZoneRadio = this.getGreenZoneRadio(app.pass.getAngle(), ongoing.who.getPassAngleError());
             
             return passDistance - greenZoneRadio;
         },

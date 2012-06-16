@@ -87,7 +87,6 @@ var canvas = {
                 a + aerr,
                 '#60F060'
             );
-            
         }
 
         // caps

@@ -151,10 +151,7 @@ function documentInit() {
 
         case "passing":
 
-            distanceInRedZone = app.pass.getDistanceInRedZone(
-                app.pass.getAngle(),
-                ongoing.who.getPassAngleError()
-            );
+            distanceInRedZone = app.pass.getDistanceInRedZone();
             
             // pass to green zone
             if (distanceInRedZone <= 0) {
