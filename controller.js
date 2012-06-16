@@ -143,7 +143,7 @@ function documentInit() {
 
             // set possession
             if (ongoing.who.isCapOverTheBall()) {
-                app.givePossession(ongoing.who);
+                app.possession.give(ongoing.who);
             }
 
             canvas.redraw();
@@ -151,8 +151,11 @@ function documentInit() {
 
         case "passing":
 
-            distanceInRedZone = getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y) - ongoing.who.getPassRange();
-
+            distanceInRedZone = app.pass.getDistanceInRedZone(
+                app.pass.getAngle(),
+                ongoing.who.getPassAngleError()
+            );
+            
             // pass to green zone
             if (distanceInRedZone <= 0) {
                 ball.x = ballPreview.x;
@@ -169,9 +172,9 @@ function documentInit() {
             // arrived to other cap
             cap = field.getElementByCoords(ball.x, ball.y);
             if (cap instanceof Cap) {
-                app.givePossession(cap);
+                app.possession.give(cap);
             } else {
-                app.clearPossession();
+                app.possession.clear();
             }
 
             canvas.redraw();
