@@ -1,5 +1,5 @@
-var IS_DEBUG_MODE = false,
-    ongoing = {what: "", who: null},
+// these globals probably will end inside app
+var ongoing = {what: "", who: null},
     $field, // currently canvas == field
     ctx, // context of the canvas
     $capmenu,
@@ -8,7 +8,7 @@ var IS_DEBUG_MODE = false,
     ballPreview;
 
 function debug(v) {
-    if (IS_DEBUG_MODE) {
+    if (app.IS_DEBUG_MODE) {
         console.log(v + ", " + ongoing);
     }
 }
@@ -18,6 +18,8 @@ function debug(v) {
  */
 var app = {
 
+    IS_DEBUG_MODE: false,
+    
     /*
      * In terms of conceptual scope, Possession > Ball and
      * Possession > Cap. That's why possession responsibilties
