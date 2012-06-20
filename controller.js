@@ -65,14 +65,6 @@ function documentInit() {
             mouseX = e.pageX - fieldOffset.left,
             mouseY = e.pageY - fieldOffset.top;
 
-        // avoid unnecessary redraw
-        if (mouseX === app.prevMouseX && mouseY === app.prevMouseY) {
-            return;
-        }
-
-        app.prevMouseX = mouseX;
-        app.prevMouseY = mouseY;
-
         switch (ongoing.what) {
 
         case "start move":
