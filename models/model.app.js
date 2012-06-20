@@ -19,6 +19,9 @@ function debug(v) {
 var app = {
 
     IS_DEBUG_MODE: false,
+
+    prevMouseX: 0,
+    prevMouseY: 0,
     
     /*
      * In terms of conceptual scope, Possession > Ball and

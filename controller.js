@@ -1,4 +1,4 @@
-/**
+/*
  * Initialization after all resources have been downloaded
  */
 $(window).load(function () {
@@ -64,6 +64,14 @@ function documentInit() {
         var fieldOffset = $field.offset(),
             mouseX = e.pageX - fieldOffset.left,
             mouseY = e.pageY - fieldOffset.top;
+
+        // avoid unnecessary redraw
+        if (mouseX === app.prevMouseX && mouseY === app.prevMouseY) {
+            return;
+        }
+
+        app.prevMouseX = mouseX;
+        app.prevMouseY = mouseY;
 
         switch (ongoing.what) {
 

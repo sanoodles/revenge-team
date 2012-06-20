@@ -87,11 +87,23 @@ var canvas = {
                 a + aerr,
                 '#60F060'
             );
-        }
+
+            // rival caps defense preview
+            for (i = 0, max = caps.length; i < max; i++) {
+                if (caps[i].team !== ongoing.who.team) {
+                    drawCircle(
+                        caps[i].x,
+                        caps[i].y,
+                        caps[i].getDefenseRange(),
+                        this.capDefenseColors[caps[i].team]
+                    );                    
+                }
+            }
+
+        } // fi pass preview
 
         // caps
         for (i = 0, max = caps.length; i < max; i++) {
-            ctx.beginPath();
             drawCircle(
                 caps[i].x,
                 caps[i].y,
@@ -115,7 +127,6 @@ var canvas = {
 
         // Ball preview
         if (ongoing.what === "start pass" || ongoing.what === "passing") {
-            ctx.beginPath();
             drawCircle(
                 ballPreview.x,
                 ballPreview.y,
@@ -135,3 +146,7 @@ canvas.capColors[Team.VISITOR] = '#A00000';
 canvas.capPreviewColors = [];
 canvas.capPreviewColors[Team.LOCAL] = '#0000F0';
 canvas.capPreviewColors[Team.VISITOR] = '#F00000';
+
+canvas.capDefenseColors = [];
+canvas.capDefenseColors[Team.LOCAL] = '#A0A0FF';
+canvas.capDefenseColors[Team.VISITOR] = '#FFA0A0';
