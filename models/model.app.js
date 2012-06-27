@@ -1,10 +1,9 @@
 /**
  * App-wide attributes and methods
  */
- 
+
 // these globals probably will end inside app
-var $field, // currently canvas == field
-    caps = [],
+var caps = [],
     ball;
 
 function debug(v) {

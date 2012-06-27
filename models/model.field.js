@@ -8,18 +8,6 @@ var field = {
     marginH: 20,
     marginV: 20,
 
-    el: null,
-
-    init: function () {
-        this.el = $("#c")[0];
-
-        // field size
-        $(this.el).attr({
-            width: field.marginH + field.width + field.marginH,
-            height: field.marginV + field.height + field.marginV
-        });
-    },
-
     getElementByCoords: function (x, y) {
         var cap, i, max;
         for (i = 0, max = caps.length; i < max; i++) {

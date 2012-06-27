@@ -5,11 +5,19 @@
  */
 
 var gc = {
-    ongoing: { // abbr of "ongoing command being graphically described by the user"
+    ongoing: { // abbr for "ongoing command being graphically described by the user"
         what: "",
         who: null
     },
-    ballPreview: new PreviewBall()
+    ballPreview: new PreviewBall(),
+    field: {
+        marginH: cc.getFieldMarginH(),
+        marginV: cc.getFieldMarginV(),
+        width: cc.getFieldWidth(),
+        height: cc.getFieldHeight(),
+        getElementByCoords: cc.getFieldElementByCoords,
+        canPutCapOnCoords: cc.canPutCapOnFieldCoords,
+    }
 };
 
 /*
@@ -47,7 +55,7 @@ function documentInit() {
         }
 
         // show cap menu
-        cap = field.getElementByCoords(relX, relY);
+        cap = gc.field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (gc.ongoing.what === "") {
                 capmenu.show(relX, relY, ball.poss !== null);
@@ -60,7 +68,7 @@ function documentInit() {
     $(document).mousemove(function (e) {
         debug("document mousemove");
 
-        var fieldOffset = $field.offset(),
+        var fieldOffset = $(canvas.el).offset(),
             mouseX = e.pageX - fieldOffset.left,
             mouseY = e.pageY - fieldOffset.top;
 
@@ -77,28 +85,28 @@ function documentInit() {
                 YDiff;
 
             // if already a cap on that position
-            if (!field.canPutCapOnCoords(gc.ongoing.who, mouseX, mouseY)) {
+            if (!gc.field.canPutCapOnCoords(gc.ongoing.who, mouseX, mouseY)) {
                 break;
             }
 
             // moving right
             if (mouseXDiff >= 0) {
                 XDiff = Math.min(mouseXDiff, maxXDiff);
-                capPreview.x = Math.min(gc.ongoing.who.x + XDiff, field.marginH + field.width);
+                capPreview.x = Math.min(gc.ongoing.who.x + XDiff, gc.field.marginH + gc.field.width);
             // moving left
             } else {
                 XDiff = Math.max(mouseXDiff, maxXDiff);
-                capPreview.x = Math.max(gc.ongoing.who.x + XDiff, field.marginH);
+                capPreview.x = Math.max(gc.ongoing.who.x + XDiff, gc.field.marginH);
             }
 
             // moving down
             if (mouseYDiff >= 0) {
                 YDiff = Math.min(mouseYDiff, maxYDiff);
-                capPreview.y = Math.min(gc.ongoing.who.y + YDiff, field.marginV + field.height);
+                capPreview.y = Math.min(gc.ongoing.who.y + YDiff, gc.field.marginV + gc.field.height);
             // moving up
             } else {
                 YDiff = Math.max(mouseYDiff, maxYDiff);
-                capPreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
+                capPreview.y = Math.max(gc.ongoing.who.y + YDiff, gc.field.marginV);
             }
 
             canvas.redraw();
@@ -112,10 +120,10 @@ function documentInit() {
             gc.ballPreview.x = mouseX;
             gc.ballPreview.y = mouseY;
 
-            gc.ballPreview.x = Math.min(mouseX, field.marginH + field.width);
-            gc.ballPreview.x = Math.max(gc.ballPreview.x, field.marginH);
-            gc.ballPreview.y = Math.min(mouseY, field.marginV + field.height);
-            gc.ballPreview.y = Math.max(gc.ballPreview.y, field.marginV);
+            gc.ballPreview.x = Math.min(mouseX, gc.field.marginH + gc.field.width);
+            gc.ballPreview.x = Math.max(gc.ballPreview.x, gc.field.marginH);
+            gc.ballPreview.y = Math.min(mouseY, gc.field.marginV + gc.field.height);
+            gc.ballPreview.y = Math.max(gc.ballPreview.y, gc.field.marginV);
 
             canvas.redraw();
 

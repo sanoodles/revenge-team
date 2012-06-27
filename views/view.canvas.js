@@ -3,7 +3,6 @@
  *
  * Reads
  *  Vars from the game controller
- *  field // TODO: replace by graphic controller variable
  *  caps // TODO: replace by graphic controller variable
  *  ball // TODO: replace by graphic controller variable
  *
@@ -12,8 +11,15 @@
 
 var canvas = {
 
+    el: null,
+
     init: function () {
-        ctx = field.el.getContext('2d');
+        this.el = $("#c")[0];
+        ctx = this.el.getContext('2d');
+        $(this.el).attr({
+            width: gc.field.marginH + gc.field.width + gc.field.marginH,
+            height: gc.field.marginV + gc.field.height + gc.field.marginV
+        });
     },
 
     redraw: function () {
@@ -60,8 +66,8 @@ var canvas = {
         ctx.rect(
             0,
             0,
-            field.marginH + field.width + field.marginH,
-            field.marginV + field.height + field.marginV
+            gc.field.marginH + gc.field.width + gc.field.marginH,
+            gc.field.marginV + gc.field.height + gc.field.marginV
         );
         ctx.fillStyle = '#009000';
         ctx.fill();
@@ -82,8 +88,8 @@ var canvas = {
 
             // Red cone. Actually a triangle wider than the field.
             p1 = {x: gc.ongoing.who.x, y: gc.ongoing.who.y};
-            p2 = utils.getPointAt(p1, field.width * 2, a - aerr);
-            p3 = utils.getPointAt(p1, field.width * 2, a + aerr);
+            p2 = utils.getPointAt(p1, gc.field.width * 2, a - aerr);
+            p3 = utils.getPointAt(p1, gc.field.width * 2, a + aerr);
             drawTriangle(p1, p2, p3, '#F06060');
 
             // Green cone. Actually a circle sector.
