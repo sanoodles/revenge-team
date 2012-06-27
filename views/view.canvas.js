@@ -2,7 +2,7 @@
  * Acts as output channel
  *
  * Reads
- *  Vars from the game controller
+ *  Vars from the graphic controller
  *  caps // TODO: replace by graphic controller variable
  *  ball // TODO: replace by graphic controller variable
  *
