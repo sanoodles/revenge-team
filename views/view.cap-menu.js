@@ -2,8 +2,8 @@
  * Also acts as input channel.
  *
  * Writes
- *  ongoing.what
- *  ongoing.who
+ *  gc.ongoing.what
+ *  gc.ongoing.who
  */
 var capmenu = {
     el: null,
@@ -11,15 +11,16 @@ var capmenu = {
 
         this.el = $("#cap-menu")[0];
         this.el.selectedIndex = 0; // otherwise a blank option appears
+        $capmenu = $(this.el)
 
         $(this.el).mousedown(function (e) {
             debug("capmenu mousedown");
-            ongoing.what = "cap menu click";
+            gc.ongoing.what = "cap menu click";
         });
 
         $(this.el).mouseup(function (e) {
             debug("capmenu mouseup");
-            if (ongoing.what === "cap menu click") {
+            if (gc.ongoing.what === "cap menu click") {
 
                 // As of jQuery 1.7.2, $("#cap-menu").val() uses depecrated techniques.
                 selId = this.selectedIndex;
@@ -29,10 +30,10 @@ var capmenu = {
 
                     switch (selectedAction) {
                     case "move":
-                        ongoing.what = "start move";
+                        gc.ongoing.what = "start move";
                         break;
                     case "pass":
-                        ongoing.what = "start pass";
+                        gc.ongoing.what = "start pass";
                         break;
                     }
                     capmenu.hide();
@@ -63,3 +64,5 @@ var capmenu = {
         $capmenu.hide();
     }
 };
+
+var $capmenu;

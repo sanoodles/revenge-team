@@ -1,15 +1,15 @@
+/**
+ * App-wide attributes and methods
+ */
+ 
 // these globals probably will end inside app
-var ongoing = {what: "", who: null},
-    $field, // currently canvas == field
-    ctx, // context of the canvas
-    $capmenu,
+var $field, // currently canvas == field
     caps = [],
-    ball,
-    ballPreview;
+    ball;
 
 function debug(v) {
     if (app.IS_DEBUG_MODE) {
-        console.log(v + ", " + ongoing);
+        console.log(v);
     }
 }
 
@@ -19,7 +19,7 @@ function debug(v) {
 var app = {
 
     IS_DEBUG_MODE: false,
-    
+
     /*
      * In terms of conceptual scope, Possession > Ball and
      * Possession > Cap. That's why possession responsibilties
@@ -33,18 +33,21 @@ var app = {
         },
         clear: function () {
             ball.poss = null;
-        }    
+        }
     },
     pass: {
 
         getGreenZoneRadio: function (a, aerr) {
-            
+
+            /**
+             * @pre ball.poss is the cap passing
+             */
             function getMinRivalInPassConeDist (a, aerr) {
                 "use strict";
-                
+
                 var i, max, aRival, aPrev, aPost, rivalDist, minRivalDist,
                     pi = Math.PI, twoPi = Math.PI * 2;
-                
+
                 /* Detect rival caps inside the pass cone
                  * In particular, it detects whether the center of a rival cap
                  * is inside the pass cone; not whether there is a rival cap
@@ -54,9 +57,9 @@ var app = {
                 aPost = a + aerr;
                 minRivalDist = field.width * 2; // initialize to "infinite"
                 for (i = 0, max = caps.length; i < max; i++) {
-                    if (caps[i].team != ongoing.who.team) {
+                    if (caps[i].team != ball.poss.team) {
 
-                        aRival = getAngle(ongoing.who, caps[i]);
+                        aRival = utils.getAngle(ball.poss, caps[i]);
 
                         // Reformat aRival if aPrev or aPost are beyond the 0..2Pi interval
                         if (aPrev < 0 && aRival > pi) {
@@ -67,9 +70,8 @@ var app = {
 
                         // if rival cap caps[i] is inside the pass cone
                         if (aRival>= aPrev && aRival <= aPost) {
-                            
-                            rivalDist = getEuclideanDistance(
-                                ongoing.who.x, ongoing.who.y, caps[i].x, caps[i].y
+                            rivalDist = utils.getEuclideanDistance(
+                                ball.poss.x, ball.poss.y, caps[i].x, caps[i].y
                             );
                             if (rivalDist < minRivalDist) {
                                 minRivalDist = rivalDist;
@@ -81,28 +83,38 @@ var app = {
             }
 
             var passRange, minRivalInPassConeDist;
-            
-            passRange = ongoing.who.getPassRange();
+
+            passRange = ball.poss.getPassRange();
             minRivalInPassConeDist = getMinRivalInPassConeDist(a, aerr);
-            
             return Math.min(passRange, minRivalInPassConeDist);
         },
-        
-        getDistanceInRedZone: function () {
+
+        /**
+         * @pre ball.poss is the cap passing
+         */
+        getDistanceInRedZone: function (toX, toY) {
             var passDistance, greenZoneRadio;
-            
-            passDistance = getEuclideanDistance(ball.x, ball.y, ballPreview.x, ballPreview.y);
-            greenZoneRadio = this.getGreenZoneRadio(app.pass.getAngle(), ongoing.who.getPassAngleError());
-            
+
+            passDistance = utils.getEuclideanDistance(ball.x, ball.y, toX, toY);
+            greenZoneRadio = this.getGreenZoneRadio(this.getAngle(toX, toY), ball.poss.getPassAngleError());
+
             return passDistance - greenZoneRadio;
         },
 
-        getAngle: function () {
-            return getAngle(
-                    {x: ongoing.who.x, y: ongoing.who.y},
-                    {x: ballPreview.x, y: ballPreview.y}
+        /**
+         * @pre ball.poss is the cap passing
+         */
+        getAngle: function (toX, toY) {
+            return utils.getAngle(
+                    {x: ball.poss.x, y: ball.poss.y},
+                    {x: toX, y: toY}
             );
         }
     }
-    
+
 };
+
+app.save = function (args) {
+
+    // console.log(args);
+}

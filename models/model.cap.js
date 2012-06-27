@@ -19,7 +19,7 @@ function GenericCap() {
         return this.defense * 3;
     }
     this.isCapOverTheBall = function () {
-        return getEuclideanDistance(this.x, this.y, ball.x, ball.y) <= this.radio;
+        return utils.getEuclideanDistance(this.x, this.y, ball.x, ball.y) <= this.radio;
     };
     this.hasBall = function () {
         return ball.poss === this;

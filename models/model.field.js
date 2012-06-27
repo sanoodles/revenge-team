@@ -41,7 +41,7 @@ var field = {
         for (i = 0, max = caps.length; i < max; i++) {
             icap = caps[i];
             if (cap !== icap) {
-                if (getEuclideanDistance(x, y, icap.x, icap.y) < cap.radio * 2) {
+                if (utils.getEuclideanDistance(x, y, icap.x, icap.y) < cap.radio * 2) {
                     return false;
                 }
             }

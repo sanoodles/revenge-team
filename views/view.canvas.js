@@ -2,17 +2,23 @@
  * Acts as output channel
  *
  * Reads
- *  ongoing.what
- *  ongoing.who
+ *  Vars from the game controller
+ *  field // TODO: replace by graphic controller variable
+ *  caps // TODO: replace by graphic controller variable
+ *  ball // TODO: replace by graphic controller variable
  *
  * @see http://en.wikipedia.org/wiki/Circle#Terminology
  */
 
 var canvas = {
 
+    init: function () {
+        ctx = field.el.getContext('2d');
+    },
+
     redraw: function () {
         "use strict";
-        
+
         function drawTriangle(p1, p2, p3, fillStyle) {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
@@ -41,11 +47,13 @@ var canvas = {
             ctx.fill();
         };
 
-        var i, // auxiliar iterator
-            max, // auxiliar loop limit
+
+
+        var i, // iterator (auxiliar)
+            max, // loop limit (auxiliar)
             a, // angle pass preview vs cap
             aerr, // pass angle error
-            p1, p2, p3; // auxiliar points of a triangle
+            p1, p2, p3; // points of a triangle (auxiliar)
 
         // field
         ctx.beginPath();
@@ -59,29 +67,29 @@ var canvas = {
         ctx.fill();
 
         // cap move range radio
-        if (ongoing.what === "start move" || ongoing.what === "moving") {
+        if (gc.ongoing.what === "start move" || gc.ongoing.what === "moving") {
             drawCircle(
-                ongoing.who.x,
-                ongoing.who.y,
-                ongoing.who.getMoveRange(), '#40C040'
+                gc.ongoing.who.x,
+                gc.ongoing.who.y,
+                gc.ongoing.who.getMoveRange(), '#40C040'
             );
         }
 
         // pass preview
-        if (ongoing.what === "start pass" || ongoing.what === "passing") {
-            a = app.pass.getAngle();
-            aerr = ongoing.who.getPassAngleError(); // angle error
+        if (gc.ongoing.what === "start pass" || gc.ongoing.what === "passing") {
+            a = app.pass.getAngle(gc.ballPreview.x, gc.ballPreview.y);
+            aerr = gc.ongoing.who.getPassAngleError(); // angle error
 
             // Red cone. Actually a triangle wider than the field.
-            p1 = {x: ongoing.who.x, y: ongoing.who.y};
-            p2 = getPointAt(p1, field.width * 2, a - aerr);
-            p3 = getPointAt(p1, field.width * 2, a + aerr);
+            p1 = {x: gc.ongoing.who.x, y: gc.ongoing.who.y};
+            p2 = utils.getPointAt(p1, field.width * 2, a - aerr);
+            p3 = utils.getPointAt(p1, field.width * 2, a + aerr);
             drawTriangle(p1, p2, p3, '#F06060');
 
             // Green cone. Actually a circle sector.
             drawSector(
-                ongoing.who.x,
-                ongoing.who.y,
+                gc.ongoing.who.x,
+                gc.ongoing.who.y,
                 app.pass.getGreenZoneRadio(a, aerr),
                 a - aerr,
                 a + aerr,
@@ -90,13 +98,13 @@ var canvas = {
 
             // rival caps defense preview
             for (i = 0, max = caps.length; i < max; i++) {
-                if (caps[i].team !== ongoing.who.team) {
+                if (caps[i].team !== gc.ongoing.who.team) {
                     drawCircle(
                         caps[i].x,
                         caps[i].y,
                         caps[i].getDefenseRange(),
                         this.capDefenseColors[caps[i].team]
-                    );                    
+                    );
                 }
             }
 
@@ -113,12 +121,12 @@ var canvas = {
         }
 
         // cap move preview
-        if (ongoing.what === "start move" || ongoing.what === "moving") {
+        if (gc.ongoing.what === "start move" || gc.ongoing.what === "moving") {
             drawCircle(
                 capPreview.x,
                 capPreview.y,
-                ongoing.who.radio,
-                this.capPreviewColors[ongoing.who.team]
+                gc.ongoing.who.radio,
+                this.capPreviewColors[gc.ongoing.who.team]
             );
         }
 
@@ -126,17 +134,17 @@ var canvas = {
         drawCircle(ball.x, ball.y, ball.radio, '#F0F0F0');
 
         // Ball preview
-        if (ongoing.what === "start pass" || ongoing.what === "passing") {
+        if (gc.ongoing.what === "start pass" || gc.ongoing.what === "passing") {
             drawCircle(
-                ballPreview.x,
-                ballPreview.y,
+                gc.ballPreview.x,
+                gc.ballPreview.y,
                 ball.radio,
                 '#FFFFFF'
             );
         }
 
     } // redraw
-    
+
 };
 
 canvas.capColors = [];
@@ -150,3 +158,5 @@ canvas.capPreviewColors[Team.VISITOR] = '#F00000';
 canvas.capDefenseColors = [];
 canvas.capDefenseColors[Team.LOCAL] = '#A0A0FF';
 canvas.capDefenseColors[Team.VISITOR] = '#FFA0A0';
+
+var ctx;
