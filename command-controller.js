@@ -1,6 +1,6 @@
 /**
  * Command controller
- * - Receives commands from the command controller
+ * - Receives commands from the graphic controller
  * - Reads and writes the models
  */
 
