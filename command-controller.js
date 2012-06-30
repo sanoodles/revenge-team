@@ -38,7 +38,7 @@
          * TODO: checking whether can put cap on coords
          * because the client can't be trusted
          */
-        cap.setPosition(capPreview.x, capPreview.y);
+        cap.setPosition(x, y);
 
         // set possession
         if (cap.isCapOverTheBall()) {

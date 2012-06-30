@@ -1,6 +1,9 @@
 /**
  * Graphic controller
  * - Receives input from the user
+ * - Chooses the view to be rendered and calls it
+ *      - Actually "configures" the only view (canvas)
+ *          - Actually writes the var named "gc"
  * - Sends commands to the command controller
  */
 
@@ -10,13 +13,9 @@ var gc = {
         who: null
     },
     ballPreview: new PreviewBall(),
-    field: {
-        marginH: cc.getFieldMarginH(),
-        marginV: cc.getFieldMarginV(),
-        width: cc.getFieldWidth(),
-        height: cc.getFieldHeight(),
-        getElementByCoords: cc.getFieldElementByCoords,
-        canPutCapOnCoords: cc.canPutCapOnFieldCoords,
+    capPreview: {
+        x: 0,
+        y: 0
     }
 };
 
@@ -55,7 +54,7 @@ function documentInit() {
         }
 
         // show cap menu
-        cap = gc.field.getElementByCoords(relX, relY);
+        cap = field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (gc.ongoing.what === "") {
                 capmenu.show(relX, relY, ball.poss !== null);
@@ -85,28 +84,28 @@ function documentInit() {
                 YDiff;
 
             // if already a cap on that position
-            if (!gc.field.canPutCapOnCoords(gc.ongoing.who, mouseX, mouseY)) {
+            if (!field.canPutCapOnCoords(gc.ongoing.who, mouseX, mouseY)) {
                 break;
             }
 
             // moving right
             if (mouseXDiff >= 0) {
                 XDiff = Math.min(mouseXDiff, maxXDiff);
-                capPreview.x = Math.min(gc.ongoing.who.x + XDiff, gc.field.marginH + gc.field.width);
+                gc.capPreview.x = Math.min(gc.ongoing.who.x + XDiff, field.marginH + field.width);
             // moving left
             } else {
                 XDiff = Math.max(mouseXDiff, maxXDiff);
-                capPreview.x = Math.max(gc.ongoing.who.x + XDiff, gc.field.marginH);
+                gc.capPreview.x = Math.max(gc.ongoing.who.x + XDiff, field.marginH);
             }
 
             // moving down
             if (mouseYDiff >= 0) {
                 YDiff = Math.min(mouseYDiff, maxYDiff);
-                capPreview.y = Math.min(gc.ongoing.who.y + YDiff, gc.field.marginV + gc.field.height);
+                gc.capPreview.y = Math.min(gc.ongoing.who.y + YDiff, field.marginV + field.height);
             // moving up
             } else {
                 YDiff = Math.max(mouseYDiff, maxYDiff);
-                capPreview.y = Math.max(gc.ongoing.who.y + YDiff, gc.field.marginV);
+                gc.capPreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
             }
 
             canvas.redraw();
@@ -120,10 +119,10 @@ function documentInit() {
             gc.ballPreview.x = mouseX;
             gc.ballPreview.y = mouseY;
 
-            gc.ballPreview.x = Math.min(mouseX, gc.field.marginH + gc.field.width);
-            gc.ballPreview.x = Math.max(gc.ballPreview.x, gc.field.marginH);
-            gc.ballPreview.y = Math.min(mouseY, gc.field.marginV + gc.field.height);
-            gc.ballPreview.y = Math.max(gc.ballPreview.y, gc.field.marginV);
+            gc.ballPreview.x = Math.min(mouseX, field.marginH + field.width);
+            gc.ballPreview.x = Math.max(gc.ballPreview.x, field.marginH);
+            gc.ballPreview.y = Math.min(mouseY, field.marginV + field.height);
+            gc.ballPreview.y = Math.max(gc.ballPreview.y, field.marginV);
 
             canvas.redraw();
 
@@ -140,12 +139,14 @@ function documentInit() {
         switch (gc.ongoing.what) {
 
         case "moving":
-            cc.move(gc.ongoing.who, capPreview.x, capPreview.y);
+            // send command "move"
+            cc.move(gc.ongoing.who, gc.capPreview.x, gc.capPreview.y);
             gc.ongoing.what = "";
             canvas.redraw();
             break;
 
         case "passing":
+            // send command "pass"
             cc.pass(gc.ballPreview.x, gc.ballPreview.y);
             gc.ongoing.what = "";
             canvas.redraw();

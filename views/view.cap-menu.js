@@ -1,9 +1,8 @@
 /**
  * Also acts as input channel.
  *
- * Writes
- *  gc.ongoing.what
- *  gc.ongoing.who
+ * Reads gc.ongoing
+ * Writes gc.ongoing
  */
 var capmenu = {
     el: null,

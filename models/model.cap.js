@@ -41,11 +41,8 @@ function Cap(id, team) {
     this.talent = 5;
     this.pass = 15;
     this.defense = 15;
+    this.dribbling = 15;
+    this.tackle = 15;
     this.team = team;
 }
 Cap.prototype = new GenericCap();
-
-var capPreview = {
-    x: 0,
-    y: 0
-};

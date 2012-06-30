@@ -2,9 +2,8 @@
  * Acts as output channel
  *
  * Reads
- *  Vars from the graphic controller
- *  caps // TODO: replace by graphic controller variable
- *  ball // TODO: replace by graphic controller variable
+ *  Vars from the graphic controller (as view configuration)
+ *  Vars from the model (as state)
  *
  * @see http://en.wikipedia.org/wiki/Circle#Terminology
  */
@@ -17,8 +16,8 @@ var canvas = {
         this.el = $("#c")[0];
         ctx = this.el.getContext('2d');
         $(this.el).attr({
-            width: gc.field.marginH + gc.field.width + gc.field.marginH,
-            height: gc.field.marginV + gc.field.height + gc.field.marginV
+            width: field.marginH + field.width + field.marginH,
+            height: field.marginV + field.height + field.marginV
         });
     },
 
@@ -66,8 +65,8 @@ var canvas = {
         ctx.rect(
             0,
             0,
-            gc.field.marginH + gc.field.width + gc.field.marginH,
-            gc.field.marginV + gc.field.height + gc.field.marginV
+            field.marginH + field.width + field.marginH,
+            field.marginV + field.height + field.marginV
         );
         ctx.fillStyle = '#009000';
         ctx.fill();
@@ -88,8 +87,8 @@ var canvas = {
 
             // Red cone. Actually a triangle wider than the field.
             p1 = {x: gc.ongoing.who.x, y: gc.ongoing.who.y};
-            p2 = utils.getPointAt(p1, gc.field.width * 2, a - aerr);
-            p3 = utils.getPointAt(p1, gc.field.width * 2, a + aerr);
+            p2 = utils.getPointAt(p1, field.width * 2, a - aerr);
+            p3 = utils.getPointAt(p1, field.width * 2, a + aerr);
             drawTriangle(p1, p2, p3, '#F06060');
 
             // Green cone. Actually a circle sector.
@@ -129,8 +128,8 @@ var canvas = {
         // cap move preview
         if (gc.ongoing.what === "start move" || gc.ongoing.what === "moving") {
             drawCircle(
-                capPreview.x,
-                capPreview.y,
+                gc.capPreview.x,
+                gc.capPreview.y,
                 gc.ongoing.who.radio,
                 this.capPreviewColors[gc.ongoing.who.team]
             );
