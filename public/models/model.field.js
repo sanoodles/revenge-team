@@ -1,4 +1,6 @@
 /**
+ * Soccer field. The green nice rectangle.
+ * @see http://en.wikipedia.org/wiki/Association_football_pitch
  * @singleton
  */
 var field = {

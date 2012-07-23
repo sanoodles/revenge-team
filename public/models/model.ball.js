@@ -1,9 +1,11 @@
+// common properties for the real and the preview balls
 function AbstractBall () {
     this.x = null;
     this.y = null;
     this.radio = 6;
 }
- 
+
+// a ball for the game
 function Ball (x, y) {
     this.x = x;
     this.y = y;
@@ -18,6 +20,7 @@ function Ball (x, y) {
 }
 Ball.prototype = new AbstractBall();
 
+// a ball use for preview purposes, such as pass preview
 function PreviewBall () {}
 PreviewBall.prototype = new AbstractBall();
 

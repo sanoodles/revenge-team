@@ -8,19 +8,28 @@
  */
 
 var gc = {
-    ongoing: { // abbr for "ongoing command being graphically described by the user"
-        what: "",
-        who: null
+
+    // abbr for "ongoing command being graphically described by the user"
+    ongoing: { 
+        what: "", // command verb (eg: "move")
+        who: null // command subject (eg: a Cap)
     },
+
+    // preview of the future position of the ball after passing
     ballPreview: new PreviewBall(),
+
+    // preview of the future position of a cap after moving
     capPreview: {
         x: 0,
         y: 0
     },
+
+    // used after the client's model is updated by the server
     onModelUpdate: function () {
         canvas.redraw();
     }
-}, cc;
+    
+}, cc; // command controller
 
 /*
  * Initialization after all resources have been downloaded
@@ -46,9 +55,9 @@ function documentInit() {
     $(document).mousedown(function (e) {
         debug("document mousedown");
 
-        var offset = $("#c").offset(),
-            relX = e.pageX - offset.left,
-            relY = e.pageY - offset.top,
+        var offset = $("#canvas").offset(),
+            relX = e.pageX - offset.left, // mouse X relative to the canvas
+            relY = e.pageY - offset.top, // mouse Y relative to the canvas
             cap;
 
         // hide cap menu
@@ -56,7 +65,7 @@ function documentInit() {
             capmenu.hide();
         }
 
-        // show cap menu
+        // if clicked over a cap, show cap menu
         cap = field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (gc.ongoing.what === "") {
@@ -86,7 +95,7 @@ function documentInit() {
                 XDiff,
                 YDiff;
 
-            // if already a cap on that position
+            // can not be two caps in the same position
             if (!field.canPutCapOnCoords(gc.ongoing.who, mouseX, mouseY)) {
                 break;
             }

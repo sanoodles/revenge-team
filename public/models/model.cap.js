@@ -1,3 +1,10 @@
+/**
+ * Cap comes from "bottle cap". Is like a soccer player in the field.
+ * The noun "cap" instead of "player" is used in this game to avoid
+ * confusion with "user".
+ * @see http://en.wikipedia.org/wiki/Bottle_cap
+ */
+ 
 if (typeof CLIENT_SIDE === 'undefined') {
     var utils = require('../utils.js').utils,
         field = require('./model.field.js').field,
@@ -5,7 +12,7 @@ if (typeof CLIENT_SIDE === 'undefined') {
 }
 
 function GenericCap() {
-    this.radio = 12,
+    this.radio = 12, // caps are round
     this.getMoveRange = function () {
         return this.speed * 4;
     };

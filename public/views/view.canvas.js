@@ -13,7 +13,7 @@ var canvas = {
     el: null,
 
     init: function () {
-        this.el = $("#c")[0];
+        this.el = $("#canvas")[0];
         ctx = this.el.getContext('2d');
         $(this.el).attr({
             width: field.marginH + field.width + field.marginH,
