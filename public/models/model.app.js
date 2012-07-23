@@ -41,6 +41,13 @@ var app = {
             ball.poss = null;
         }
     },
+
+    /**
+     * A pass has a green zone (near pass) and a red zone (far pass).
+     * If made to the green zone, the ball arrives to the exact previewed target point.
+     * If made to the red zone, the ball final position is distorted by an error,
+     * that is larger as the pass is attempted farther.
+     */
     pass: {
 
         getGreenZoneRadio: function (a, aerr) {
