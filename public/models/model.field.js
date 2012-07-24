@@ -18,7 +18,7 @@ var field = {
     },
 
     /**
-     * @return The first cap that is on the coords x y
+     * @return {Cap} The first cap found to be in the coords x y of the field
      */
     getElementByCoords: function (x, y) {
         var cap, i, max;
@@ -50,4 +50,5 @@ var field = {
     }
 };
 
+// shitty export for node.js
 if (typeof CLIENT_SIDE === 'undefined') exports.field = field;
