@@ -4,13 +4,13 @@
  * Reads gc.ongoing
  * Writes gc.ongoing
  */
-var capmenu = {
+var capMenu = {
     el: null,
     init: function () {
 
         this.el = $("#cap-menu")[0];
         this.el.selectedIndex = 0; // otherwise a blank option appears
-        $capmenu = $(this.el)
+        $capMenu = $(this.el)
 
         $(this.el).mousedown(function (e) {
             debug("capmenu mousedown");
@@ -35,7 +35,7 @@ var capmenu = {
                         gc.ongoing.what = "start pass";
                         break;
                     }
-                    capmenu.hide();
+                    capMenu.hide();
                     canvas.redraw();
                 }
             }
@@ -52,16 +52,16 @@ var capmenu = {
         this.el.selectedIndex = 0;
 
         $("#cap-menu-pass")[0].disabled = !isPassVisible;
-        $capmenu.children().each(function (index, element) {
+        $capMenu.children().each(function (index, element) {
             element.style.display = (element.disabled ? "none" : "");
         });
-        $capmenu.attr("size", (isPassVisible ? 2 : 1));
-        $capmenu.css({left: relX, top: relY}).show();
+        $capMenu.attr("size", (isPassVisible ? 2 : 1));
+        $capMenu.css({left: relX, top: relY}).show();
     },
 
     hide: function () {
-        $capmenu.hide();
+        $capMenu.hide();
     }
 };
 
-var $capmenu;
+var $capMenu;

@@ -29,18 +29,19 @@ var gc = {
         canvas.redraw();
     }
     
-}, cc; // command controller
+};
 
 /*
  * Initialization after all resources have been downloaded
  */
 $(window).load(function () {
+    
     cc.init();
 
     // input channel initialization
     documentInit();
-    capmenu.init();
-    capmenu.hide();
+    capMenu.init();
+    capMenu.hide();
 
     // output channel initialization
     canvas.init();
@@ -62,14 +63,14 @@ function documentInit() {
 
         // hide cap menu
         if (gc.ongoing.what === "cap menu choose") {
-            capmenu.hide();
+            capMenu.hide();
         }
 
         // if clicked over a cap, show cap menu
         cap = field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (gc.ongoing.what === "") {
-                capmenu.show(relX, relY, app.ball.poss !== null);
+                capMenu.show(relX, relY, app.ball.poss !== null);
                 gc.ongoing.what = "cap menu choose";
                 gc.ongoing.who = cap;
             }

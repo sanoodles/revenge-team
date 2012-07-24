@@ -16,6 +16,10 @@ var field = {
     getRandomY: function () {
         return this.marginV + Math.random() * this.height;
     },
+
+    /**
+     * @return The first cap that is on the coords x y
+     */
     getElementByCoords: function (x, y) {
         var cap, i, max;
         for (i = 0, max = app.caps.length; i < max; i++) {

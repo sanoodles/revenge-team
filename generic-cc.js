@@ -26,24 +26,6 @@ function CommandController () {
         app.caps[2] = new Cap(2, field.getRandomX(), field.getRandomY(), Team.VISITOR);
         app.ball = new Ball(field.getRandomX(), field.getRandomY());
     };
-    this.getFieldMarginH = function () {
-        return field.marginH;
-    };
-    this.getFieldMarginV = function () {
-        return field.marginV;
-    };
-    this.getFieldWidth = function () {
-        return field.width;
-    };
-    this.getFieldHeight = function () {
-        return field.height;
-    };
-    this.getFieldElementByCoords = function (x, y) {
-         return field.getElementByCoords(x, y);
-    };
-    this.canPutCapOnFieldCoords = function (x, y) {
-        return field.canPutCapOnCoords(x, y);
-    };
 
      /**
       * @param st {JSON} Game variables status

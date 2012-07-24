@@ -1,5 +1,6 @@
 /**
 Client Command Controller
+Inherits from Generic Command Controller (/generic-cc.js)
 
     On user command:
         Generic behavior
@@ -8,7 +9,16 @@ Client Command Controller
         Generic behavior
         Calls the graphic controller
 */
-var cc = new CommandController();
+var cc = new CommandController(); // @see /generic-cc.js
+
+/*
+ * TODO:
+ * 1. Here (client-cc.js) define a ClientCommandController constructor
+ *      that inherits from CommandController (generic-cc.js)
+ * 2. On gc.js, create an instance of ClientCommandController named cc
+ *
+ */
+
 cc.socket = null;
 
 cc.init = function () {
