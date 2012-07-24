@@ -1,6 +1,8 @@
 /**
- * Also acts as input channel.
- *
+ * Cap menu is the contextual menu of a cap. It offers options such as
+ * move and pass.
+ *  
+ * Acts as input channel.
  * Reads gc.ongoing
  * Writes gc.ongoing
  */
