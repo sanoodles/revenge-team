@@ -20,11 +20,11 @@ if (typeof CLIENT_SIDE === 'undefined') {
 function CommandController () {
     
     this.genericInit = function () {
-        // app initialization
-        app.caps[0] = new Cap(0, field.getRandomX(), field.getRandomY(), Team.LOCAL);
-        app.caps[1] = new Cap(1, field.getRandomX(), field.getRandomY(), Team.LOCAL);
-        app.caps[2] = new Cap(2, field.getRandomX(), field.getRandomY(), Team.VISITOR);
-        app.ball = new Ball(field.getRandomX(), field.getRandomY());
+        // object creation needed by both client and server
+        app.caps[0] = new Cap(0, 50, 50, Team.LOCAL);
+        app.caps[1] = new Cap(1, 100, 100, Team.LOCAL);
+        app.caps[2] = new Cap(2, 150, 150, Team.VISITOR);
+        app.ball = new Ball(200, 200);
     };
 
      /**

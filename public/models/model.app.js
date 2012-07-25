@@ -1,3 +1,7 @@
+if (typeof CLIENT_SIDE === 'undefined') {
+    var Cap = require("./model.cap.js").Cap;
+}
+
 function debug(v) {
     if (app.IS_DEBUG_MODE) {
         console.log(v);
@@ -24,6 +28,13 @@ var app = {
             if (this.caps[i].id == capId) return this.caps[i];
         }
         return null;
+    },
+
+    getStatus: function () {
+        return {
+            ball: this.ball.getStatus(),
+            caps: this.caps.map(function (c) { return c.getStatus() })
+        }
     },
 
     /**

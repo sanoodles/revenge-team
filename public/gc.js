@@ -45,9 +45,6 @@ $(window).load(function () {
 
     // output channel initialization
     canvas.init();
-
-    // first screen paint
-    canvas.redraw();
 });
 
 // helper

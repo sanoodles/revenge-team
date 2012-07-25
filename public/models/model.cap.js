@@ -43,6 +43,13 @@ function GenericCap() {
             app.ball.setPosition(x, y);
         }
     };
+    this.getStatus = function () {
+        return {
+            id: this.id,
+            x: this.x,
+            y: this.y
+        };
+    }
 }
 
 function Cap(id, x, y, team) {
