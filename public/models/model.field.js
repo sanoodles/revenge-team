@@ -5,8 +5,14 @@
  */
 var field = {
 
-    height: 480,
-    width: 672, // 480 * 1.4
+    height: 640,
+    width: 1000, // 480 * 1.4
+    areaHeight: 400,
+    areaWidth: 160,
+    smallAreaHeight: 190,
+    smallAreaWidth: 55,
+    centralCircleRadius: 91,
+    penaltyDistance: 110,
     marginH: 20,
     marginV: 20,
 
