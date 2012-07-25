@@ -18,7 +18,7 @@ if (typeof CLIENT_SIDE === 'undefined') {
 }
 
 function CommandController () {
-    
+
     this.genericInit = function () {
         // object creation needed by both client and server
         app.caps[0] = new Cap(0, 50, 50, Team.LOCAL);

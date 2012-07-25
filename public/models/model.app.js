@@ -39,7 +39,7 @@ var app = {
 
     /**
      * The possession can be given to a cap, or cleared.
-     * 
+     *
      * Why "app" is the responsible for the possession instead of
      * "ball" or "cap":
      * Because in terms of conceptual scope, Possession > Ball and
@@ -57,20 +57,32 @@ var app = {
     },
 
     /**
+     * The pass range of a cap is influenced by the pass skill.
+     *
+     * The angle of the pass cone of a cap is influenced by the talent skill.
+     *
+     * The pass range is limited by the presence of a rival cap in the pass cone.
+     *
      * A pass is attempted from a passing cap to a target point.
+     *
      * An ongoing pass has a green zone (near pass) and a red zone (far pass).
+     *
      * If made to the green zone, the ball will arrive to the exact previewed target point.
+     *
      * If made to the red zone, the ball final position will be distorted by an error,
      * that is larger as the pass is attempted farther.
+     *
+     * When the user selects pass, for all rivals, a circle will appear. Its
+     * radio is influenced by the defense skill.
      *
      * The pass attribute is only used as a namespace; to group the pass-related methods.
      */
     pass: {
 
         /**
-         * @param {Float} a [0..2Pi] The angle between the passing cap and the target point.
-         * @param {Float} aerr [0..Pi] Pass angle error. The greater, the wider the pass cone.
-         * @pre ball.poss is the passing cap
+         * @param {Float} a [0..2Pi] The angle of the target point using the passing cap as angle vertex. In radians.
+         * @param {Float} aerr [0..Pi] Error angle of the pass. The greater, the wider the pass cone. In radians.
+         * @pre app.ball.poss is the passing cap
          */
         getGreenZoneRadio: function (a, aerr) {
 
@@ -83,13 +95,17 @@ var app = {
 
                 var i, max, rivalDist,
                     minRivalDist = field.width * 2, // initialize to "infinite"
-                    aRival, // angle between the passing cap and the rival
+                    aRival, // angle of the rival using the passing cap as vertex
 
-                    // angle of the passing cone previous to the target point [-Pi..2Pi]
+                    /* angle of the first pass cone side [-Pi..2Pi]
+                     * (comes before the target point)
+                     */
                     aPrev = a - aerr,
 
-                    // angle of the passing cone posterior to the target point [0..3Pi]
-                    aPost = a + aerr, 
+                    /* angle of the second pass cone side [0..3Pi]
+                     * (comes after the target point)
+                     */
+                    aPost = a + aerr,
                     pi = Math.PI, twoPi = Math.PI * 2;
 
                 /* Detect rival caps inside the pass cone
@@ -123,11 +139,11 @@ var app = {
                 return minRivalDist;
             }
 
-            var capPassRange, minRivalInPassConeDist;
+            var passingCapPassRange, minRivalInPassConeDist;
 
-            capPassRange = app.ball.poss.getPassRange();
+            passingCapPassRange = app.ball.poss.getPassRange();
             minRivalInPassConeDist = getMinRivalInPassConeDist(a, aerr);
-            return Math.min(capPassRange, minRivalInPassConeDist);
+            return Math.min(passingCapPassRange, minRivalInPassConeDist);
         },
 
         /**
