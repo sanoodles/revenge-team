@@ -34,7 +34,7 @@ function CommandController () {
         app.ball.setPosition(st.ball.x, st.ball.y);
     };
 
-    this.move = function (capId, x, y) {
+    this.move = function (capId, x, y) {            
         var cap = app.getCapById(capId);
         /*
          * TODO: checking whether can put cap on coords

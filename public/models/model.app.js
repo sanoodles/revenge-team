@@ -36,12 +36,12 @@ var app = {
      */
     possession: {
         give: function (cap) {
-            ball.poss = cap;
-            ball.x = cap.x;
-            ball.y = cap.y;
+            app.ball.poss = cap;
+            app.ball.x = cap.x;
+            app.ball.y = cap.y;
         },
         clear: function () {
-            ball.poss = null;
+            app.ball.poss = null;
         }
     },
 
@@ -59,7 +59,7 @@ var app = {
         /**
          * @param {Float} a [0..2Pi] The angle between the passing cap and the target point.
          * @param {Float} aerr [0..Pi] Pass angle error. The greater, the wider the pass cone.
-         * @pre ball.poss is the passing cap
+         * @pre app.ball.poss is the passing cap
          */
         getGreenZoneRadio: function (a, aerr) {
 
@@ -86,10 +86,10 @@ var app = {
                  * is inside the pass cone; not whether there is a rival cap
                  * touching the pass cone.
                  */
-                for (i = 0, max = caps.length; i < max; i++) {
-                    if (caps[i].team != ball.poss.team) {
+                for (i = 0, max = app.caps.length; i < max; i++) {
+                    if (app.caps[i].team != app.ball.poss.team) {
 
-                        aRival = utils.getAngle(ball.poss, caps[i]);
+                        aRival = utils.getAngle(app.ball.poss, app.caps[i]);
 
                         // magic
                         if (aPrev < 0 && aRival > pi) {
@@ -98,10 +98,10 @@ var app = {
                             aRival = aRival + twoPi;
                         }
 
-                        // if rival cap caps[i] is inside the pass cone
+                        // if rival cap app.caps[i] is inside the pass cone
                         if (aRival>= aPrev && aRival <= aPost) {
                             rivalDist = utils.getEuclideanDistance(
-                                ball.poss.x, ball.poss.y, caps[i].x, caps[i].y
+                                app.ball.poss.x, app.ball.poss.y, app.caps[i].x, app.caps[i].y
                             );
                             if (rivalDist < minRivalDist) {
                                 minRivalDist = rivalDist;
@@ -114,7 +114,7 @@ var app = {
 
             var capPassRange, minRivalInPassConeDist;
 
-            capPassRange = ball.poss.getPassRange();
+            capPassRange = app.ball.poss.getPassRange();
             minRivalInPassConeDist = getMinRivalInPassConeDist(a, aerr);
             return Math.min(capPassRange, minRivalInPassConeDist);
         },
@@ -126,19 +126,19 @@ var app = {
         getDistanceInRedZone: function (toX, toY) {
             var passDistance, greenZoneRadio;
 
-            passDistance = utils.getEuclideanDistance(ball.x, ball.y, toX, toY);
-            greenZoneRadio = this.getGreenZoneRadio(this.getAngle(toX, toY), ball.poss.getPassAngleError());
+            passDistance = utils.getEuclideanDistance(app.ball.x, app.ball.y, toX, toY);
+            greenZoneRadio = this.getGreenZoneRadio(this.getAngle(toX, toY), app.ball.poss.getPassAngleError());
 
             return passDistance - greenZoneRadio;
         },
 
         /**
          * Get angle from the passing cap to a given point
-         * @pre ball.poss is the passing cap
+         * @pre app.ball.poss is the passing cap
          */
         getAngle: function (toX, toY) {
             return utils.getAngle(
-                    {x: ball.poss.x, y: ball.poss.y},
+                    {x: app.ball.poss.x, y: app.ball.poss.y},
                     {x: toX, y: toY}
             );
         }

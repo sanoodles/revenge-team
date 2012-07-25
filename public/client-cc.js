@@ -23,7 +23,7 @@ cc.socket = null;
 
 cc.init = function () {
     this.genericInit();
-    socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+    // socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
 },
 
 /**
@@ -40,5 +40,5 @@ cc.run = function (cmd, params) {
             this.pass(params.x, params.y);
     }
     
-    socket.emit(cmd, params);
+    // socket.emit(cmd, params);
 }
