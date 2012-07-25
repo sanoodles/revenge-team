@@ -1,4 +1,5 @@
-Note to editors: use http://en.wikipedia.org/wiki/Markdown
+Note to editors: This file is marked up using
+http://en.wikipedia.org/wiki/Markdown
 
 # Revenge Team rule book
 
