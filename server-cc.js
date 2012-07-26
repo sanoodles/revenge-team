@@ -31,7 +31,7 @@ cc.init = function () {
 
 cc.onSocketConnection = function (client) {
     util.log("New player has connected: " + client.id);
-    this.emit("update", app.getStatus());
+    this.emit("update", cc.getStatus());
     client.on("disconnect", onClientDisconnect);
     client.on("move", onMove);
     client.on("remove player", onRemovePlayer);
@@ -44,7 +44,7 @@ function onClientDisconnect () {
 function onMove (params) {
     util.log("move");
     cc.move(params.capId, params.x, params.y);
-    this.broadcast.emit("update", app.getStatus());
+    this.broadcast.emit("update", cc.getStatus());
 };
 
 function onRemovePlayer () {

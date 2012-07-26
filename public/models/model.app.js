@@ -30,13 +30,6 @@ var app = {
         return null;
     },
 
-    getStatus: function () {
-        return {
-            ball: this.ball.getStatus(),
-            caps: this.caps.map(function (c) { return c.getStatus() })
-        }
-    },
-
     /**
      * The possession can be given to a cap, or cleared.
      *

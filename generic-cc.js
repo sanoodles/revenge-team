@@ -27,11 +27,37 @@ function CommandController () {
         app.ball = new Ball(200, 200);
     };
 
-     /**
-      * @param st {JSON} Game variables status
-      */
+    /**
+     * The reverse of setStatus
+     * Used for client-server communication
+     * getStatus is actually only used by the client; could be moved
+     * to client-cc.js
+     * @return {JSON} Status of the game variables
+     */
+    this.getStatus = function () {
+        return {
+            ball: app.ball.getStatus(),
+            caps: app.caps.map(function (c) { return c.getStatus() })
+        }
+    }
+
+    /**
+     * The reverse of to getStatus
+     * Used for client-server communication
+     * setStatus is actually only used by the server; could be moved
+     * to server-cc.js
+     * @param st {JSON} Status of the game variables
+     * @post Writes the model with the variables in st
+     */
     this.setStatus = function (st) {
+        // ball
         app.ball.setPosition(st.ball.x, st.ball.y);
+        app.ball.poss = st.ball.poss ? app.getCapById(st.ball.poss) : null;
+
+        // caps
+        st.caps.forEach(function (c) {
+            app.getCapById(c.id).setPosition(c.x, c.y);
+        });
     };
 
     this.move = function (capId, x, y) {

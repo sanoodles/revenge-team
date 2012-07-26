@@ -48,9 +48,6 @@ cc.run = function (cmd, params) {
 
 function onUpdate (params) {
     console.log(params);
-    app.ball.setPosition(params.ball.x, params.ball.y);
-    params.caps.forEach(function (c) {
-        app.getCapById(c.id).setPosition(c.x, c.y);
-    });
+    cc.setStatus(params);
     gc.onModelUpdate();
 }
