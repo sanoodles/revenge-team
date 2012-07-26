@@ -41,13 +41,13 @@ cc.run = function (cmd, params) {
             break;
         case "pass":
             this.pass(params.x, params.y);
+            break;
     }
     
     socket.emit(cmd, params);
 }
 
 function onUpdate (params) {
-    console.log(params);
     cc.setStatus(params);
     gc.onModelUpdate();
 }

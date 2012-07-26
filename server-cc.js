@@ -1,11 +1,11 @@
-var util                = require("util"),
+var app         = require('./public/models/model.app.js').app
+    Ball        = require('./public/models/model.ball.js').Ball,
+    Cap         = require('./public/models/model.cap.js').Cap,
     CommandController   = require("./generic-cc.js").CommandController,
     field       = require('./public/models/model.field.js').field,
-    Team        = require('./public/models/model.team.js').Team,
-    Cap         = require('./public/models/model.cap.js').Cap,
-    Ball        = require('./public/models/model.ball.js').Ball,
     PreviewBall = require('./public/models/model.ball.js').PreviewBall,
-    app         = require('./public/models/model.app.js').app;
+    Team        = require('./public/models/model.team.js').Team,
+    util        = require("util");
 
 // @see https://github.com/robhawkes/mozilla-festival/blob/master/game.js
 var cc = new CommandController();
@@ -34,6 +34,7 @@ cc.onSocketConnection = function (client) {
     this.emit("update", cc.getStatus());
     client.on("disconnect", onClientDisconnect);
     client.on("move", onMove);
+    client.on("pass", onPass);
     client.on("remove player", onRemovePlayer);
 };
 
@@ -44,7 +45,15 @@ function onClientDisconnect () {
 function onMove (params) {
     util.log("move");
     cc.move(params.capId, params.x, params.y);
-    this.broadcast.emit("update", cc.getStatus());
+    this.emit("update", cc.getStatus()); // to the sender
+    this.broadcast.emit("update", cc.getStatus()); // to all the rest
+};
+
+function onPass (params) {
+    util.log("pass");
+    cc.pass(params.x, params.y);
+    this.emit("update", cc.getStatus()); // to the sender
+    this.broadcast.emit("update", cc.getStatus()); // to all the rest
 };
 
 function onRemovePlayer () {

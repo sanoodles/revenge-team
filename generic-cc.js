@@ -9,12 +9,12 @@
  */
 
 if (typeof CLIENT_SIDE === 'undefined') {
-    var field       = require('./public/models/model.field.js').field,
-        Team        = require('./public/models/model.team.js').Team,
+    var app         = require('./public/models/model.app.js').app,
+        Ball        = require('./public/models/model.ball.js').Ball
         Cap         = require('./public/models/model.cap.js').Cap,
-        Ball        = require('./public/models/model.ball.js').Ball,
+        field       = require('./public/models/model.field.js').field,
         PreviewBall = require('./public/models/model.ball.js').PreviewBall,
-        app         = require('./public/models/model.app.js').app;
+        Team        = require('./public/models/model.team.js').Team;
 }
 
 function CommandController () {

@@ -1,3 +1,10 @@
+if (typeof CLIENT_SIDE === 'undefined') {
+    var util = require("util"),
+        app = require('./model.app.js').app,
+        field = require('./model.field.js').field,
+        utils = require('../utils.js').utils;
+}
+
 /**
  * Soccer field. The green nice rectangle.
  * @see http://en.wikipedia.org/wiki/Association_football_pitch

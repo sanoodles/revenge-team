@@ -1,7 +1,3 @@
-if (typeof CLIENT_SIDE === 'undefined') {
-    var Cap = require("./model.cap.js").Cap;
-}
-
 function debug(v) {
     if (app.IS_DEBUG_MODE) {
         console.log(v);
@@ -172,3 +168,9 @@ app.save = function (args) {
 }
 
 if (typeof CLIENT_SIDE === 'undefined') exports.app = app;
+
+if (typeof CLIENT_SIDE === 'undefined') {
+    var Cap     = require("./model.cap.js").Cap,
+        field   = require('./model.field.js').field,
+        utils   = require("../utils.js").utils;
+}
