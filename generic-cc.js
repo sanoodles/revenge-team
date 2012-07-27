@@ -67,6 +67,8 @@ function CommandController () {
             app.ball.y = y + Math.random() * (randomFactor - randomFactor / 2);
         }
 
+        alert(app.pass.insideTackleArea(app.ball.x, app.ball.y));
+
         // arrived to other cap
         cap = field.getElementByCoords(app.ball.x, app.ball.y);
         if (cap instanceof Cap) {

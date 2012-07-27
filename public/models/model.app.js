@@ -157,7 +157,31 @@ var app = {
                     {x: app.ball.poss.x, y: app.ball.poss.y},
                     {x: toX, y: toY}
             );
-        }
+        },
+
+        /** when a player passes the ball, the D players have a tackle area
+        * around them if the pass is inside this tackle area, the D player
+        * will be able to fight for the ball
+        * RETURNS -1 if the final pass position is free, or the CAP ID otherwise
+        */
+        insideTackleArea: function(toX, toY) {
+
+            var i, max;
+            for (i = 0, max = app.caps.length; i < max; i++) {
+
+                if (app.caps[i].team != app.ball.poss.team) {
+                    
+                    dist = utils.getEuclideanDistance(
+                        app.caps[i].x, app.caps[i].y, 
+                        toX, toY
+                        );
+                    if (dist < app.caps[i].getDefenseRange()) {
+                        return app.caps[i].id;
+                    }
+                }
+            }
+            return -1;
+        },
     }
 
 };
