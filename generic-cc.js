@@ -62,9 +62,9 @@ function CommandController () {
 
         // pass to red zone
         } else {
-            randomFactor = distanceInRedZone + app.ball.poss.radio * 2;
-            app.ball.x = x + Math.random() * (randomFactor - randomFactor / 2);
-            app.ball.y = y + Math.random() * (randomFactor - randomFactor / 2);
+            randomFactor = distanceInRedZone*1.5;// + app.ball.poss.radio * 2;
+            app.ball.x = x + Math.random()*randomFactor*2-randomFactor;
+            app.ball.y = y + Math.random()*randomFactor*2-randomFactor;
         }
 
         alert(app.pass.insideTackleArea(app.ball.x, app.ball.y));
