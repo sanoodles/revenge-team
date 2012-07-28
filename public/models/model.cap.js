@@ -12,7 +12,9 @@ if (typeof CLIENT_SIDE === 'undefined') {
 }
 
 function GenericCap() {
+
     this.radio = 12, // caps are round
+
     this.getMoveRange = function () {
         return this.speed * 4;
     };
@@ -29,6 +31,9 @@ function GenericCap() {
     }
     this.getDefenseRange = function () {
         return this.defense * 3;
+    }
+    this.getControlRange = function () {
+        return this.control * 3;
     }
     this.isCapOverTheBall = function () {
         return utils.getEuclideanDistance(this.x, this.y, app.ball.x, app.ball.y) <= this.radio;
@@ -50,9 +55,10 @@ function Cap(id, x, y, team) {
     this.x = x;
     this.y = y;
     this.speed = 60; // on steroids just for debugging purposes
-    this.talent = 5;
-    this.pass = 15;
-    this.defense = 15;
+    this.talent = 15; // getPassAngleError
+    this.pass = 15; // getPassRange
+    this.defense = 15; // getDefenseRange
+    this.control = 10; // getControlRange
     this.dribbling = 15;
     this.tackle = 15;
     this.team = team;

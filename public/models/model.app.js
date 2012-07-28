@@ -162,25 +162,45 @@ var app = {
         /** when a player passes the ball, the D players have a tackle area
         * around them if the pass is inside this tackle area, the D player
         * will be able to fight for the ball
-        * RETURNS -1 if the final pass position is free, or the CAP ID otherwise
+        * RETURNS null if the final pass position is free, or the CAP ref otherwise
         */
         insideTackleArea: function(toX, toY) {
 
             var i, max;
             for (i = 0, max = app.caps.length; i < max; i++) {
 
-                if (app.caps[i].team != app.ball.poss.team) {
+                if (app.caps[i].team !== app.ball.poss.team) {
                     
                     dist = utils.getEuclideanDistance(
                         app.caps[i].x, app.caps[i].y, 
                         toX, toY
                         );
                     if (dist < app.caps[i].getDefenseRange()) {
-                        return app.caps[i].id;
+                        return app.caps[i];
                     }
                 }
             }
-            return -1;
+            return null;
+        },
+
+        /** same as insideTackleArea
+        * but for A teams and based on control skill
+        **/
+        insideControlArea: function(toX, toY) {
+
+            var i, max;
+            for (i = 0, max = app.caps.length; i < max; i++) {
+                if (app.caps[i].team === app.ball.poss.team) {
+                    dist = utils.getEuclideanDistance(
+                        app.caps[i].x, app.caps[i].y,
+                        toX, toY
+                        );
+                    if (dist < app.caps[i].getControlRange()) {
+                        return app.caps[i];
+                    }
+                }
+            }
+            return null;
         },
     }
 

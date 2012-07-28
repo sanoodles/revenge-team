@@ -67,7 +67,7 @@ var canvas = {
             ctx.beginPath();
             ctx.moveTo(field.marginH+field.width/2, field.marginV);
             ctx.lineTo(field.marginH+field.width/2, field.marginV+field.height);
-            ctx.strokeStyle = '#FFFFF';
+            ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 2;
             ctx.stroke();
 
@@ -232,15 +232,29 @@ var canvas = {
                 '#60F060'
             );
 
-            // rival caps defense preview
+            // caps defense and control preview
             for (i = 0, max = app.caps.length; i < max; i++) {
-                if (app.caps[i].team !== gc.ongoing.who.team) {
+
+                // rival cap defense preview
+                if (app.caps[i].team !== app.ball.poss.team) {
                     drawCircle(
                         app.caps[i].x,
                         app.caps[i].y,
                         app.caps[i].getDefenseRange(),
                         this.capDefenseColors[app.caps[i].team]
                     );
+                } 
+
+                // own caps control preview
+                if (app.caps[i].team === app.ball.poss.team) {
+                    if ( !app.caps[i].hasBall() ) {
+                        drawCircle(
+                            app.caps[i].x,
+                            app.caps[i].y,
+                            app.caps[i].getControlRange(),
+                            this.capDefenseColors[app.caps[i].team]
+                        );
+                    }
                 }
             }
 
