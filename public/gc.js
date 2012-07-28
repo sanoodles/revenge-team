@@ -64,6 +64,8 @@ function documentInit() {
         // hide cap menu
         if (gc.ongoing.what === "cap menu choose") {
             capMenu.hide();
+            gc.ongoing.what = "";
+            gc.ongoing.who = null;
         }
 
         // if clicked over a cap, show cap menu
