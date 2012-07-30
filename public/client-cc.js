@@ -31,13 +31,19 @@ cc.init = function () {
  */
 cc.run = function (cmd, params) {
     // socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-
     switch (cmd) {
         case "move":
             this.move(params.capId, params.x, params.y);
             break;
+        case "dribbling":
+            this.dribbling(params.capId, params.x, params.y);
+            break;
         case "pass":
             this.pass(params.x, params.y);
+            break;
+        case "unstun":
+            this.unstun();
+            break;
     }
     
     // socket.emit(cmd, params);

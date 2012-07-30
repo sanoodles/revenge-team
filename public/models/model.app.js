@@ -103,7 +103,7 @@ var app = {
                  * touching the pass cone.
                  */
                 for (i = 0, max = app.caps.length; i < max; i++) {
-                    if (app.caps[i].team != app.ball.poss.team) {
+                    if (app.caps[i].team != app.ball.poss.team && app.caps[i].dribbled === -1) {
 
                         aRival = utils.getAngle(app.ball.poss, app.caps[i]);
 
@@ -169,7 +169,7 @@ var app = {
             var i, max;
             for (i = 0, max = app.caps.length; i < max; i++) {
 
-                if (app.caps[i].team !== app.ball.poss.team) {
+                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].dribbled === -1) {
                     
                     dist = utils.getEuclideanDistance(
                         app.caps[i].x, app.caps[i].y, 

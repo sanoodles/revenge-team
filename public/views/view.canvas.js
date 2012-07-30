@@ -211,6 +211,15 @@ var canvas = {
             );
         }
 
+        // dribble area preview
+        if (gc.ongoing.what === "start dribbling" || gc.ongoing.what === "dribbling") {
+            drawCircle(
+                gc.ongoing.who.x,
+                gc.ongoing.who.y,
+                gc.ongoing.who.getControlRange(), this.capDefenseColors[gc.ongoing.who.team]
+            );
+        }
+
         // pass preview
         if (gc.ongoing.what === "start pass" || gc.ongoing.what === "passing") {
             a = app.pass.getAngle(gc.ballPreview.x, gc.ballPreview.y);
@@ -236,7 +245,7 @@ var canvas = {
             for (i = 0, max = app.caps.length; i < max; i++) {
 
                 // rival cap defense preview
-                if (app.caps[i].team !== app.ball.poss.team) {
+                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].dribbled === -1) {
                     drawCircle(
                         app.caps[i].x,
                         app.caps[i].y,
@@ -265,12 +274,21 @@ var canvas = {
 
         // caps
         for (i = 0, max = app.caps.length; i < max; i++) {
-            drawCircle(
-                app.caps[i].x,
-                app.caps[i].y,
-                app.caps[i].radio,
-                this.capColors[app.caps[i].team]
-            );
+            if (app.caps[i].dribbled === -1) {
+                drawCircle(
+                    app.caps[i].x,
+                    app.caps[i].y,
+                    app.caps[i].radio,
+                    this.capColors[app.caps[i].team]
+                );
+            } else {
+                drawCircle(
+                    app.caps[i].x,
+                    app.caps[i].y,
+                    app.caps[i].radio,
+                    '#777777'
+                );
+            }
         }
 
         // cap move preview
@@ -281,6 +299,21 @@ var canvas = {
                 gc.ongoing.who.radio,
                 this.capPreviewColors[gc.ongoing.who.team]
             );
+        }
+
+        // cap dribbling preview
+        if (gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling") {
+            drawCircle( // point where to dribble
+                gc.dribblePreview.x,
+                gc.dribblePreview.y,
+                5,
+                '#000000'
+            );
+            ctx.beginPath();
+            ctx.moveTo(gc.ongoing.who.x, gc.ongoing.who.y);
+            ctx.lineTo(gc.dribblePreview.x, gc.dribblePreview.y);
+            ctx.lineWidth = 1;
+            ctx.stroke();
         }
 
         // ball
@@ -311,5 +344,7 @@ canvas.capPreviewColors[Team.VISITOR] = '#F00000';
 canvas.capDefenseColors = [];
 canvas.capDefenseColors[Team.LOCAL] = '#A0A0FF';
 canvas.capDefenseColors[Team.VISITOR] = '#FFA0A0';
+
+canvas.stunnedColor = '#777777'
 
 var ctx;

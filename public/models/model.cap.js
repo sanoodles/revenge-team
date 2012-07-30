@@ -62,6 +62,7 @@ function Cap(id, x, y, team) {
     this.dribbling = 15;
     this.tackle = 15;
     this.team = team;
+    this.dribbled = -1; // when a cup is dribbled it is stunned for 1 turn (stunned = 1)
 }
 Cap.prototype = new GenericCap();
 

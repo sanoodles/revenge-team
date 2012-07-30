@@ -24,6 +24,12 @@ var gc = {
         y: 0
     },
 
+    // preview of the dribble objective
+    dribblePreview: {
+        x: 0,
+        y: 0
+    },
+
     // used after the client's model is updated by the server
     onModelUpdate: function () {
         canvas.redraw();
@@ -61,6 +67,15 @@ function documentInit() {
             relY = e.pageY - offset.top, // mouse Y relative to the canvas
             cap;
 
+        if (gc.ongoing.what == "passing") {
+            gc.ongoing.what = "passed";
+        }
+        if (gc.ongoing.what == "moving") {
+            gc.ongoing.what = "moved";
+        }
+        if (gc.ongoing.what == "dribbling") {
+            gc.ongoing.what = "dribbled";
+        }
         // hide cap menu
         if (gc.ongoing.what === "cap menu choose") {
             capMenu.hide();
@@ -133,7 +148,6 @@ function documentInit() {
         case "passing":
             gc.ballPreview.x = mouseX;
             gc.ballPreview.y = mouseY;
-
             gc.ballPreview.x = Math.min(mouseX, field.marginH + field.width);
             gc.ballPreview.x = Math.max(gc.ballPreview.x, field.marginH);
             gc.ballPreview.y = Math.min(mouseY, field.marginV + field.height);
@@ -144,25 +158,71 @@ function documentInit() {
             gc.ongoing.what = "passing";
             break;
 
+        case "start dribbling":
+        case "dribbling":
+
+            var mouseXDiff = mouseX - gc.ongoing.who.x,
+                mouseYDiff = mouseY - gc.ongoing.who.y,
+                ang = utils.getAngle(gc.ongoing.who, {x: mouseX, y: mouseY}),
+                maxXDiff = gc.ongoing.who.getControlRange() * Math.sin(ang),
+                maxYDiff = -1 * gc.ongoing.who.getControlRange() * Math.cos(ang),
+                XDiff,
+                YDiff;
+
+            // moving right
+            if (mouseXDiff >= 0) {
+                XDiff = Math.min(mouseXDiff, maxXDiff);
+                gc.dribblePreview.x = Math.min(gc.ongoing.who.x + XDiff, field.marginH + field.width);
+            // moving left
+            } else {
+                XDiff = Math.max(mouseXDiff, maxXDiff);
+                gc.dribblePreview.x = Math.max(gc.ongoing.who.x + XDiff, field.marginH);
+            }
+
+            // moving down
+            if (mouseYDiff >= 0) {
+                YDiff = Math.min(mouseYDiff, maxYDiff);
+                gc.dribblePreview.y = Math.min(gc.ongoing.who.y + YDiff, field.marginV + field.height);
+            // moving up
+            } else {
+                YDiff = Math.max(mouseYDiff, maxYDiff);
+                gc.dribblePreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
+            }
+
+            gc.ongoing.what = "dribbling";
+            canvas.redraw();
+            break;
+
         }
 
     });
 
     $(document).mouseup(function (e) {
-        debug("document mouseup");
+        debug("document mouseup"); 
 
         switch (gc.ongoing.what) {
 
-        case "moving":
+        case "moved":
             // send command "move"
             cc.run("move", {capId: gc.ongoing.who.id, x: gc.capPreview.x, y: gc.capPreview.y});
             gc.ongoing.what = "";
+            // make valid again all the stunned / dribbled caps
+            cc.run("unstun");
             canvas.redraw();
             break;
 
-        case "passing":
+        case "passed":
             // send command "pass"
             cc.run("pass", {x: gc.ballPreview.x, y: gc.ballPreview.y});
+            gc.ongoing.what = "";
+            // make valid again all the stunned / dribbled caps
+            cc.run("unstun");
+            canvas.redraw();
+            break;
+
+        case "dribbled":
+            // send command "dribbling"
+            cc.run("dribbling", {capId: gc.ongoing.who.id, x: gc.dribblePreview.x, y: gc.dribblePreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;

@@ -46,3 +46,16 @@ tackle skill is > roll, D gains control. Otherwise more deflection.
 Inside the red area, after the random factor applied to any pass in the red area, if it lays only
 inside a D area, a 20 dice is rolled. if tackle skill > roll, D gains control, otherwise more deflection.
 If it lays inside A area and D area, a roll dice tackle vs control. If D wins, more deflection.
+
+## Dribbling
+
+A cap with ball possession can dribble another cap in his control area. The control area is defined by
+the control skill. The player chooses the cap to dribble inside his own cap control area.
+
+In order to dribble, the "dribble" skill is compared to the "tackle" skill, rolling a dice.
+
+If the dribbling cap loses, the tackling cap gains ball possession.
+
+If the dribbling cap wins, the tackling cap is stunned for 1 turn.
+
+When a cap is stunned, it doesn't interfere in any of the other attacking actions, like pass, shoot,...

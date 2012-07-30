@@ -36,6 +36,9 @@ var capMenu = {
                     case "pass":
                         gc.ongoing.what = "start pass";
                         break;
+                    case "dribbling":
+                        gc.ongoing.what = "start dribbling";
+                        break;
                     }
                     capMenu.hide();
                     canvas.redraw();
@@ -45,7 +48,7 @@ var capMenu = {
 
     },
 
-    show: function (relX, relY, isPassVisible) {
+    show: function (relX, relY, ballControl) {
 
         /*
          * if not done, the last selected option will appear as the current value,
@@ -53,11 +56,12 @@ var capMenu = {
          */
         this.el.selectedIndex = 0;
 
-        $("#cap-menu-pass")[0].disabled = !isPassVisible;
+        $("#cap-menu-pass").attr("disabled", !ballControl);
+        $("#cap-menu-dribbling").attr("disabled", !ballControl);
         $capMenu.children().each(function (index, element) {
             element.style.display = (element.disabled ? "none" : "");
         });
-        $capMenu.attr("size", (isPassVisible ? 2 : 1));
+        $capMenu.attr("size", (ballControl ? 3 : 1));
         $capMenu.css({left: relX, top: relY}).show();
     },
 
