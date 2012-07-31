@@ -39,6 +39,9 @@ var capMenu = {
                     case "dribbling":
                         gc.ongoing.what = "start dribbling";
                         break;
+                    case "tackle":
+                        gc.ongoing.what = "start tackle";
+                        break;
                     }
                     capMenu.hide();
                     canvas.redraw();

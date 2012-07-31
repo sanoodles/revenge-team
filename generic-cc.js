@@ -38,7 +38,7 @@ function CommandController () {
     this.unstun = function () {
         var i, max;
         for (i = 0, max = app.caps.length; i < max; i++) {
-            app.caps[i].dribbled = -1;
+            app.caps[i].stun = -1;
         }
     };
 
@@ -57,6 +57,17 @@ function CommandController () {
 
     };
 
+    this.tackle = function(capId, x, y) {
+
+        // true if the tackle succeeds
+        var succeed = app.tackle(capId, x, y);
+        if (succeed) {
+            capD = app.getCapById(capId);
+            app.ball.x = capD.x;
+            app.ball.y = capD.y;
+        }
+    }
+
     this.dribbling = function(capId, x, y) {
 
         // cap to dribble
@@ -71,7 +82,7 @@ function CommandController () {
                 app.ball.x = capD.x;
                 app.ball.y = capD.y;
             } else { // A wins, D player dribbled for 1 turn
-                capD.dribbled = 1;
+                capD.stun = 1;
             }
         }
 

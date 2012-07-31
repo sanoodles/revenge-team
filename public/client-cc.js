@@ -38,6 +38,9 @@ cc.run = function (cmd, params) {
         case "dribbling":
             this.dribbling(params.capId, params.x, params.y);
             break;
+        case "tackle":
+            this.tackle(params.capId, params.x, params.y);
+            break;
         case "pass":
             this.pass(params.x, params.y);
             break;

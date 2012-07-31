@@ -26,6 +26,28 @@ var app = {
         return null;
     },
 
+        // returns true if the tackle succeeds, false otherwise
+    tackle: function(capId, x, y) {
+
+        // cap to tackle
+        capA = field.getElementByCoords(x, y);
+        capD = app.getCapById(capId);
+        console.log(x,y);
+        if (capA instanceof Cap && capA.hasBall()) {
+            //we compare roll dice dribbling and tackle
+            tacklingDice = Math.random()*20 + capD.tackle;
+            dribblingDice = Math.random()*20 + capA.dribbling;
+            diffDice = dribblingDice - tacklingDice;
+            if (diffDice < 0) { //D wins tackler gets ball
+                app.possession.give(capD);
+                return true;
+            } else { // A wins, D player stunned for 1 turn
+                capD.stun = 1;
+                return false;
+            }
+        }
+    },
+
     /**
      * The possession can be given to a cap, or cleared.
      *
@@ -217,7 +239,7 @@ var app = {
             }
             return null;
         },
-    }
+    },
 
 };
 

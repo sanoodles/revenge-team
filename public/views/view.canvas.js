@@ -220,6 +220,15 @@ var canvas = {
             );
         }
 
+        // tackle area preview
+        if (gc.ongoing.what === "start tackle" || gc.ongoing.what === "tackling") {
+            drawCircle(
+                gc.ongoing.who.x,
+                gc.ongoing.who.y,
+                gc.ongoing.who.getDefenseRange(), this.capDefenseColors[gc.ongoing.who.team]
+            );
+        }
+
         // pass preview
         if (gc.ongoing.what === "start pass" || gc.ongoing.what === "passing") {
             a = app.pass.getAngle(gc.ballPreview.x, gc.ballPreview.y);
@@ -245,7 +254,7 @@ var canvas = {
             for (i = 0, max = app.caps.length; i < max; i++) {
 
                 // rival cap defense preview
-                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].dribbled === -1) {
+                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].stun === -1) {
                     drawCircle(
                         app.caps[i].x,
                         app.caps[i].y,
@@ -274,7 +283,7 @@ var canvas = {
 
         // caps
         for (i = 0, max = app.caps.length; i < max; i++) {
-            if (app.caps[i].dribbled === -1) {
+            if (app.caps[i].stun === -1) {
                 drawCircle(
                     app.caps[i].x,
                     app.caps[i].y,
@@ -301,7 +310,7 @@ var canvas = {
             );
         }
 
-        // cap dribbling preview
+        // cap dribbling target preview
         if (gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling") {
             drawCircle( // point where to dribble
                 gc.dribblePreview.x,
@@ -312,6 +321,21 @@ var canvas = {
             ctx.beginPath();
             ctx.moveTo(gc.ongoing.who.x, gc.ongoing.who.y);
             ctx.lineTo(gc.dribblePreview.x, gc.dribblePreview.y);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // cap tackling target preview
+        if (gc.ongoing.what === "tackling" || gc.ongoing.what === "start tackle") {
+            drawCircle( // point where to dribble
+                gc.tacklePreview.x,
+                gc.tacklePreview.y,
+                5,
+                '#000000'
+            );
+            ctx.beginPath();
+            ctx.moveTo(gc.ongoing.who.x, gc.ongoing.who.y);
+            ctx.lineTo(gc.tacklePreview.x, gc.tacklePreview.y);
             ctx.lineWidth = 1;
             ctx.stroke();
         }

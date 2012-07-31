@@ -30,6 +30,11 @@ var gc = {
         y: 0
     },
 
+    tacklePreview: {
+        x: 0,
+        y: 0
+    },
+
     // used after the client's model is updated by the server
     onModelUpdate: function () {
         canvas.redraw();
@@ -67,14 +72,17 @@ function documentInit() {
             relY = e.pageY - offset.top, // mouse Y relative to the canvas
             cap;
 
-        if (gc.ongoing.what == "passing") {
+        if (gc.ongoing.what === "passing") {
             gc.ongoing.what = "passed";
         }
-        if (gc.ongoing.what == "moving") {
+        if (gc.ongoing.what === "moving") {
             gc.ongoing.what = "moved";
         }
-        if (gc.ongoing.what == "dribbling") {
+        if (gc.ongoing.what === "dribbling") {
             gc.ongoing.what = "dribbled";
+        }
+        if (gc.ongoing.what === "tackling") {
+            gc.ongoing.what = "tackled";
         }
         // hide cap menu
         if (gc.ongoing.what === "cap menu choose") {
@@ -193,6 +201,41 @@ function documentInit() {
             canvas.redraw();
             break;
 
+        case "start tackle":
+        case "tackling":
+
+            var mouseXDiff = mouseX - gc.ongoing.who.x,
+                mouseYDiff = mouseY - gc.ongoing.who.y,
+                ang = utils.getAngle(gc.ongoing.who, {x: mouseX, y: mouseY}),
+                maxXDiff = gc.ongoing.who.getDefenseRange() * Math.sin(ang),
+                maxYDiff = -1 * gc.ongoing.who.getDefenseRange() * Math.cos(ang),
+                XDiff,
+                YDiff;
+
+            // moving right
+            if (mouseXDiff >= 0) {
+                XDiff = Math.min(mouseXDiff, maxXDiff);
+                gc.tacklePreview.x = Math.min(gc.ongoing.who.x + XDiff, field.marginH + field.width);
+            // moving left
+            } else {
+                XDiff = Math.max(mouseXDiff, maxXDiff);
+                gc.tacklePreview.x = Math.max(gc.ongoing.who.x + XDiff, field.marginH);
+            }
+
+            // moving down
+            if (mouseYDiff >= 0) {
+                YDiff = Math.min(mouseYDiff, maxYDiff);
+                gc.tacklePreview.y = Math.min(gc.ongoing.who.y + YDiff, field.marginV + field.height);
+            // moving up
+            } else {
+                YDiff = Math.max(mouseYDiff, maxYDiff);
+                gc.tacklePreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
+            }
+
+            gc.ongoing.what = "tackling";
+            canvas.redraw();
+            break;
+
         }
 
     });
@@ -223,6 +266,13 @@ function documentInit() {
         case "dribbled":
             // send command "dribbling"
             cc.run("dribbling", {capId: gc.ongoing.who.id, x: gc.dribblePreview.x, y: gc.dribblePreview.y});
+            gc.ongoing.what = "";
+            canvas.redraw();
+            break;
+
+        case "tackled":
+            // send command "tackle"
+            cc.run("tackle", {capId: gc.ongoing.who.id, x: gc.tacklePreview.x, y: gc.tacklePreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;

@@ -59,3 +59,12 @@ If the dribbling cap loses, the tackling cap gains ball possession.
 If the dribbling cap wins, the tackling cap is stunned for 1 turn.
 
 When a cap is stunned, it doesn't interfere in any of the other attacking actions, like pass, shoot,...
+
+## Tackle
+
+All defensive players can tackle the opposing player that controls the ball if it is inside their
+defensive area.
+
+A roll dice is done comparing defensive tackle skill vs offensive dribbling skill.
+
+If defender wins, he gains the ball. Otherwise he will be stunned for 1 turn.
