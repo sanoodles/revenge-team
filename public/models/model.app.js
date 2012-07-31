@@ -39,9 +39,24 @@ var app = {
             app.ball.poss = cap;
             app.ball.x = cap.x;
             app.ball.y = cap.y;
+
+            //now it gives team possesion / clear it from every cap attribute
+            var i, max;
+            for (i = 0, max = app.caps.length; i < max; i++) {
+                if (app.caps[i].team !== app.ball.poss.team) {
+                    app.caps[i].teampos = false;
+                } else {
+                    app.caps[i].teampos = true;
+                }
+            }
         },
         clear: function () {
             app.ball.poss = null;
+            //clear team possesion from every cap attribute
+            var i, max;
+            for (i = 0, max = app.caps.length; i < max; i++) {
+                app.caps[i].teampos = false;
+            }
         }
     },
 

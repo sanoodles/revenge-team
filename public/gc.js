@@ -87,7 +87,7 @@ function documentInit() {
         cap = field.getElementByCoords(relX, relY);
         if (cap instanceof Cap) {
             if (gc.ongoing.what === "") {
-                capMenu.show(e.clientX - 10, e.clientY - 5, app.ball.poss === cap);
+                capMenu.show(e.clientX - 10, e.clientY - 5, app.ball.poss === cap, cap.teampos);
                 gc.ongoing.what = "cap menu choose";
                 gc.ongoing.who = cap;
             }

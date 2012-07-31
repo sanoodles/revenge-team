@@ -48,7 +48,7 @@ var capMenu = {
 
     },
 
-    show: function (relX, relY, ballControl) {
+    show: function (relX, relY, ballControl, teamPossession) {
 
         /*
          * if not done, the last selected option will appear as the current value,
@@ -58,10 +58,19 @@ var capMenu = {
 
         $("#cap-menu-pass").attr("disabled", !ballControl);
         $("#cap-menu-dribbling").attr("disabled", !ballControl);
+        $("#cap-menu-tackle").attr("disabled", teamPossession);
         $capMenu.children().each(function (index, element) {
             element.style.display = (element.disabled ? "none" : "");
         });
-        $capMenu.attr("size", (ballControl ? 3 : 1));
+        var menuSize;
+        if (ballControl) {
+            menuSize = 3;
+        } else if (!teamPossession) {
+            menuSize = 2;
+        } else {
+            menuSize = 1;
+        }
+        $capMenu.attr("size", menuSize);
         $capMenu.css({left: relX, top: relY}).show();
     },
 
