@@ -48,6 +48,26 @@ var app = {
         }
     },
 
+    dribbling: function(capId, x, y) {
+
+        // cap to dribble
+        capD = field.getElementByCoords(x, y);
+        capA = app.getCapById(capId);
+        if (capD instanceof Cap) {
+            //we compare roll dice dribbling and tackle
+            tacklingDice = Math.random()*20 + capD.tackle;
+            dribblingDice = Math.random()*20 + capA.dribbling;
+            diffDice = dribblingDice - tacklingDice;
+            if (diffDice < 0) { //D wins tackler gets ball
+                app.possession.give(capD);
+                return false;
+            } else { // A wins, D player stunned for 1 turn
+                capD.stun = 1;
+                return true;
+            }
+        }
+    },
+
     /**
      * The possession can be given to a cap, or cleared.
      *

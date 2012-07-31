@@ -66,32 +66,16 @@ function CommandController () {
             app.ball.x = capD.x;
             app.ball.y = capD.y;
         }
-    }
+    };
 
     this.dribbling = function(capId, x, y) {
 
-        // cap to dribble
-        capD = field.getElementByCoords(x, y);
-        capA = app.getCapById(capId);
-        if (capD instanceof Cap) {
-            //we compare roll dice dribbling and tackle
-            tacklingDice = Math.random()*20 + capD.tackle;
-            dribblingDice = Math.random()*20 + capA.dribbling;
-            diffDice = dribblingDice - tacklingDice;
-            if (diffDice < 0) { //D wins tackler gets ball
-                app.ball.x = capD.x;
-                app.ball.y = capD.y;
-            } else { // A wins, D player dribbled for 1 turn
-                capD.stun = 1;
-            }
-        }
-
-        // stolen by anoter cap
-        cap = field.getElementByCoords(app.ball.x, app.ball.y);
-        if (cap instanceof Cap) {
-            app.possession.give(cap);
-        } else {
-            app.possession.clear();
+        // true if dribbling succeeds
+        var succeed = app.dribbling(capId, x, y);
+        if (!succeed) {
+            capD = app.getCapById(capId);
+            app.ball.x = capD.x;
+            app.ball.y = capD.y;
         }
     };
 
