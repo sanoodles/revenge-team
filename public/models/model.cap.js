@@ -60,7 +60,7 @@ function Cap(id, x, y, team) {
     this.defense = 15; // getDefenseRange
     this.control = 10; // getControlRange
     this.dribbling = 15;
-    this.tackle = 15;
+    this.tackle = 11;
     this.team = team;
     this.stun = -1; // when a cup is dribbled or fails tackle it is stunned for 1 turn (stunned = 1)
     this.teampos = false; // false if its team doesnt have ball possession, true otherwise

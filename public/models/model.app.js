@@ -26,13 +26,20 @@ var app = {
         return null;
     },
 
-        // returns true if the tackle succeeds, false otherwise
+    // unstun all the caps, every turn. caps are stunned only 1 turn
+    unstun: function () {
+        var i, max;
+        for (i = 0, max = app.caps.length; i < max; i++) {
+            app.caps[i].stun = -1;
+        }
+    },
+
+    // returns true if the tackle succeeds, false otherwise
     tackle: function(capId, x, y) {
 
         // cap to tackle
         capA = field.getElementByCoords(x, y);
         capD = app.getCapById(capId);
-        console.log(x,y);
         if (capA instanceof Cap && capA.hasBall()) {
             //we compare roll dice dribbling and tackle
             tacklingDice = Math.random()*20 + capD.tackle;
@@ -48,6 +55,7 @@ var app = {
         }
     },
 
+    // returns true if the dribble succeeds, false otherwise
     dribbling: function(capId, x, y) {
 
         // cap to dribble
@@ -226,7 +234,7 @@ var app = {
             var i, max;
             for (i = 0, max = app.caps.length; i < max; i++) {
 
-                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].dribbled === -1) {
+                if (app.caps[i].team !== app.ball.poss.team && app.caps[i].stun === -1) {
                     
                     dist = utils.getEuclideanDistance(
                         app.caps[i].x, app.caps[i].y, 

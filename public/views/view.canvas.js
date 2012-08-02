@@ -339,7 +339,6 @@ var canvas = {
             ctx.lineWidth = 1;
             ctx.stroke();
         }
-
         // ball
         drawCircle(app.ball.x, app.ball.y, app.ball.radio, '#F0F0F0');
 

@@ -35,11 +35,9 @@ function CommandController () {
         app.ball.setPosition(st.ball.x, st.ball.y);
     };
 
+    // unstun all the caps, every turn. caps are stunned only 1 turn
     this.unstun = function () {
-        var i, max;
-        for (i = 0, max = app.caps.length; i < max; i++) {
-            app.caps[i].stun = -1;
-        }
+        app.unstun();
     };
 
     this.move = function (capId, x, y) {            
@@ -59,24 +57,12 @@ function CommandController () {
 
     this.tackle = function(capId, x, y) {
 
-        // true if the tackle succeeds
-        var succeed = app.tackle(capId, x, y);
-        if (succeed) {
-            capD = app.getCapById(capId);
-            app.ball.x = capD.x;
-            app.ball.y = capD.y;
-        }
+        app.tackle(capId, x, y);
     };
 
     this.dribbling = function(capId, x, y) {
 
-        // true if dribbling succeeds
-        var succeed = app.dribbling(capId, x, y);
-        if (!succeed) {
-            capD = app.getCapById(capId);
-            app.ball.x = capD.x;
-            app.ball.y = capD.y;
-        }
+        app.dribbling(capId, x, y);
     };
 
       /**
@@ -95,6 +81,7 @@ function CommandController () {
             // ball final position, is a desired by the possesion team
             // or distorted by the D team
             var tacklerPlayer = app.pass.insideTackleArea(app.ball.x, app.ball.y);
+
             if (tacklerPlayer instanceof Cap) {
                 // desired player receiver (if exists)
                 cap = field.getElementByCoords(app.ball.x, app.ball.y);
@@ -131,14 +118,16 @@ function CommandController () {
                             app.ball.y = y + Math.random() * tacklerPlayer.tackle * 2;
                         }
                     } else { //only under D player tackle area, 100% deflaction
+
                         randomDice = Math.random() * 20;
+                        alert(randomDice);
                         if (randomDice < tacklerPlayer.tackle) {
                             app.ball.x = tacklerPlayer.x;
                             app.ball.y = tacklerPlayer.y;
                         } else { // dont gain control, more deflaction
                             app.ball.x = x + Math.random() * tacklerPlayer.tackle * 2;
                             app.ball.y = y + Math.random() * tacklerPlayer.tackle * 2;
-                    }
+                        }
                     }
                 }
             }
@@ -149,8 +138,8 @@ function CommandController () {
             app.ball.x = x + (Math.random()*randomFactor*2-randomFactor)*20;
             app.ball.y = y + (Math.random()*randomFactor*2-randomFactor)*20;
 
-            // in red zone, if after the random deflaction the ball lays
-            // over a D player, he can add more deflaction or gain control
+            // in red zone, if after the random deflection the ball lays
+            // over a D player, he can add more deflection or gain control
 
             // first we consider the case where the ball lays in both
             // D tackler area and A control area. same code as before
@@ -166,7 +155,7 @@ function CommandController () {
                             app.ball.x = x + Math.random() * tacklerPlayer.tackle * 2;
                             app.ball.y = y + Math.random() * tacklerPlayer.tackle * 2;
                         }
-                } else { //lays only in tackler area, the D player can gain control
+                } else { //lays only in tackler area only, the D player can gain control
                     randomDice = Math.random() * 20;
                     if (randomDice < tacklerPlayer.tackle) {
                         app.ball.x = tacklerPlayer.x;
