@@ -224,7 +224,8 @@ var app = {
             );
         },
 
-        /** when a player passes the ball, the D players have a tackle area
+        /** 
+        * When a player passes the ball, the D players have a tackle area
         * around them if the pass is inside this tackle area, the D player
         * will be able to fight for the ball
         * RETURNS null if the final pass position is free, or the CAP ref otherwise
@@ -248,7 +249,8 @@ var app = {
             return null;
         },
 
-        /** same as insideTackleArea
+        /** 
+        * same as insideTackleArea
         * but for A teams and based on control skill
         **/
         insideControlArea: function(toX, toY) {
@@ -266,6 +268,116 @@ var app = {
                 }
             }
             return null;
+        },
+
+        /** 
+        * When the ball lays in the red zone
+        * and it also lays inside a defender D area
+        * the defender can steal the ball or add more deflaction
+        **/
+        toRedZone: function(x, y) {
+
+            // random deflaction applied to any ball inside red zone
+            randomFactor = Math.log(distanceInRedZone);
+            app.ball.x = x + (Math.random()*randomFactor*2-randomFactor)*20;
+            app.ball.y = y + (Math.random()*randomFactor*2-randomFactor)*20;
+
+            // if after the random deflection the ball lays
+            // over a D player, he can add more deflection or gain control
+
+            // first we consider the case where the ball lays in both
+            // D tackler area and A control area.
+            var tacklerPlayer = app.pass.insideTackleArea(app.ball.x, app.ball.y);
+
+            if (tacklerPlayer instanceof Cap) {
+                var controlPlayer = app.pass.insideControlArea(app.ball.x, app.ball.y);
+                if (controlPlayer instanceof Cap) { //lays in both control area
+                        controlDice = Math.random()*20 + controlPlayer.control;
+                        tacklerDice = Math.random()*20 + tacklerPlayer.tackle;
+                        tackleRes = controlDice - tacklerDice;
+                        if (tackleRes < 0) {
+                            app.ball.x = x + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                            app.ball.y = y + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                        }
+                } else { //lays only in tackler area only, the D player can gain control
+                    randomDice = Math.random() * 20;
+                    if (randomDice < tacklerPlayer.tackle) {
+                        app.ball.x = tacklerPlayer.x;
+                        app.ball.y = tacklerPlayer.y;
+                    } else { // dont gain control, more deflaction
+                        app.ball.x = x + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                        app.ball.y = y + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                    }
+                }
+            }
+        },
+        toGreenZone: function(x, y) {
+            app.ball.x = x;
+            app.ball.y = y;
+
+            // if the pass is to green area but inside an enemy tackle area
+            // he fights for it, so a 20 dice roll will decide if the
+            // ball final position, is as desired by the possesion team
+            // or distorted by the D team
+            var tacklerPlayer = app.pass.insideTackleArea(app.ball.x, app.ball.y);
+
+            if (tacklerPlayer instanceof Cap) {
+                // desired player receiver (if exists)
+                cap = field.getElementByCoords(app.ball.x, app.ball.y);
+
+                // the desired final position is a cap
+                if (cap instanceof Cap) {
+
+                    possDice = Math.random()*20 + cap.control;
+                    // his dice multiplied by 0.75 to give advg the to the A team in
+                    // green area
+                    tacklerDice = (Math.random()*20 + tacklerPlayer.tackle)*0.75;
+                    tackleRes = possDice - tacklerDice;
+
+                    if (tackleRes < 0 && tackleRes > -5) { //slight deflection by defender
+                        app.ball.x = x + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                        app.ball.y = y + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                    } else if (tackleRes < -5) { //strong deflection, defender wins possesion
+                        app.ball.x = tacklerPlayer.x;
+                        app.ball.y = tacklerPlayer.y;
+                    }
+                } else { // there is no cap receiver, "pass to space"
+
+                    var controlPlayer = app.pass.insideControlArea(app.ball.x, app.ball.y);
+
+                    // if the ball is inside the control area of an A player
+                    // both the A player and the D player fight for it
+                    if (controlPlayer instanceof Cap) {
+                        controlDice = Math.random()*20 + controlPlayer.control;
+                        tacklerDice = Math.random()*20 + tacklerPlayer.tackle;
+                        tackleRes = controlDice - tacklerDice;
+
+                        if (tackleRes < 0) { //deflaction by D player
+                            app.ball.x = x + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                            app.ball.y = y + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                        }
+                    } else { //only under D player tackle area, 100% deflaction
+
+                        randomDice = Math.random() * 20;
+                        if (randomDice < tacklerPlayer.tackle) {
+                            app.ball.x = tacklerPlayer.x;
+                            app.ball.y = tacklerPlayer.y;
+                        } else { // dont gain control, more deflaction
+                            app.ball.x = x + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                            app.ball.y = y + (Math.random() * tacklerPlayer.tackle * 2 - tacklerPlayer.tackle)*2;
+                        }
+                    }
+                }
+            }
+        },
+        checkPossession: function() {
+            // arrived to other cap
+            cap = field.getElementByCoords(app.ball.x, app.ball.y);
+            if (cap instanceof Cap) {
+                app.possession.give(cap);
+            } else {
+                app.possession.clear();
+            }
         },
     },
 
