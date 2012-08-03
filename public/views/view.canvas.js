@@ -303,42 +303,29 @@ var canvas = {
         // cap move preview
         if (gc.ongoing.what === "start move" || gc.ongoing.what === "moving") {
             drawCircle(
-                gc.capPreview.x,
-                gc.capPreview.y,
+                gc.dragPreview.x,
+                gc.dragPreview.y,
                 gc.ongoing.who.radio,
                 this.capPreviewColors[gc.ongoing.who.team]
             );
         }
 
-        // cap dribbling target preview
-        if (gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling") {
+        // cap tackling / dribbling target preview
+        if (gc.ongoing.what === "tackling" || gc.ongoing.what === "start tackle"
+            || gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling") {
             drawCircle( // point where to dribble
-                gc.dribblePreview.x,
-                gc.dribblePreview.y,
+                gc.dragPreview.x,
+                gc.dragPreview.y,
                 5,
                 '#000000'
             );
             ctx.beginPath();
             ctx.moveTo(gc.ongoing.who.x, gc.ongoing.who.y);
-            ctx.lineTo(gc.dribblePreview.x, gc.dribblePreview.y);
+            ctx.lineTo(gc.dragPreview.x, gc.dragPreview.y);
             ctx.lineWidth = 1;
             ctx.stroke();
         }
-
-        // cap tackling target preview
-        if (gc.ongoing.what === "tackling" || gc.ongoing.what === "start tackle") {
-            drawCircle( // point where to dribble
-                gc.tacklePreview.x,
-                gc.tacklePreview.y,
-                5,
-                '#000000'
-            );
-            ctx.beginPath();
-            ctx.moveTo(gc.ongoing.who.x, gc.ongoing.who.y);
-            ctx.lineTo(gc.tacklePreview.x, gc.tacklePreview.y);
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
+        
         // ball
         drawCircle(app.ball.x, app.ball.y, app.ball.radio, '#F0F0F0');
 
