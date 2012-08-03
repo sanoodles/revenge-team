@@ -168,7 +168,7 @@ var app = {
                  * touching the pass cone.
                  */
                 for (i = 0, max = app.caps.length; i < max; i++) {
-                    if (app.caps[i].team != app.ball.poss.team && app.caps[i].dribbled === -1) {
+                    if (app.caps[i].team != app.ball.poss.team && app.caps[i].stun === -1) {
 
                         aRival = utils.getAngle(app.ball.poss, app.caps[i]);
 
