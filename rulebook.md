@@ -68,3 +68,21 @@ defensive area.
 A roll dice is done comparing defensive tackle skill vs offensive dribbling skill.
 
 If defender wins, he gains the ball. Otherwise he will be stunned for 1 turn.
+
+## Cover
+
+A defensive player can cover an offensive player. While the D player covers the A player, the cap
+will follow automatically the A player wherever it goes.
+
+Visually, the cover is marked in the canvas by a line between both caps.
+
+This movement is bounded by the D speed parameter. If the A player moves more than what the D player
+can move, the D player will only move a fraction.
+
+If the distance between the A player and the D player that is covering A is bigger than the D
+defense skill, the cover is broken.
+
+When the cap A moves the cap D follows it automatically, but if the end cap position would
+place if over another cap, the D cap won't move. This is called "block".
+
+Only D caps can cover. When the D team recovers the possesion, all the covers are broken.

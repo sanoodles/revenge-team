@@ -48,13 +48,46 @@ function GenericCap() {
             app.ball.setPosition(x, y);
         }
     };
+
+    // if this cap is covering an attacking cap, and the attacking cap moves
+    // this cap will move automatically, following the attacking cap
+    // x_mov and y_mov are the x,y displacements of the attacking cap
+    this.moveIfCovering = function(x_mov, y_mov) {
+
+        // distance the A cap is moving
+        var dist = utils.getEuclideanDistance(x_mov, y_mov, 0, 0);
+
+        // if the distance the A cap is moving is bigger than
+        // the max distance the D cap can move, the D cap only
+        // moves a ratio of the distance
+        if (dist > this.getMoveRange()) {
+
+            ratio = this.getMoveRange() / dist;
+            
+            // if the covering cap lays over another cap, it doesnt move, "block"
+            if (!(field.getElementByCoords(this.x+x_mov*ratio, 
+                this.y+x_mov*ratio) instanceof Cap)) {
+
+                this.x += x_mov*ratio;
+                this.y += y_mov*ratio;
+            }                 
+
+        } else { // the D cap moves the same distance as the A cap
+            
+            // if the covering cap lays over another cap, it doesnt move, "block"
+            if (!(field.getElementByCoords(this.x+x_mov, this.y+y_mov) instanceof Cap)) {
+                this.x += x_mov;
+                this.y += y_mov;
+            } 
+        }
+    };
 }
 
 function Cap(id, x, y, team) {
     this.id = id;
     this.x = x;
     this.y = y;
-    this.speed = 60; // on steroids just for debugging purposes
+    this.speed = Math.random()*60; // on steroids just for debugging purposes
     this.talent = 15; // getPassAngleError
     this.pass = 15; // getPassRange
     this.defense = 15; // getDefenseRange
@@ -64,6 +97,8 @@ function Cap(id, x, y, team) {
     this.team = team;
     this.stun = -1; // when a cup is dribbled or fails tackle it is stunned for 1 turn (stunned = 1)
     this.teampos = false; // false if its team doesnt have ball possession, true otherwise
+    this.covering = null; // it will ref to a cap if this cap is covering another one
+    this.coveredBy = null; // it will ref to a cap if this cap is covered by another one
 }
 Cap.prototype = new GenericCap();
 

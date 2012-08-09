@@ -41,6 +41,9 @@ cc.run = function (cmd, params) {
         case "tackle":
             this.tackle(params.capId, params.x, params.y);
             break;
+        case "cover":
+            this.cover(params.capId, params.x, params.y);
+            break;
         case "pass":
             this.pass(params.x, params.y);
             break;

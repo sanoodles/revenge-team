@@ -104,6 +104,9 @@ function documentInit() {
         if (gc.ongoing.what === "tackling") {
             gc.ongoing.what = "tackled";
         }
+        if (gc.ongoing.what === "covering") {
+            gc.ongoing.what = "covered";
+        }
         // hide cap menu
         if (gc.ongoing.what === "cap menu choose") {
             capMenu.hide();
@@ -176,6 +179,14 @@ function documentInit() {
             canvas.redraw();
             break;
 
+        case "start cover":
+        case "covering":
+
+            gc.dragCheck(mouseX, mouseY, gc.ongoing.who.getDefenseRange());
+            gc.ongoing.what = "covering";
+            canvas.redraw();
+            break;
+
         }
 
     });
@@ -213,6 +224,13 @@ function documentInit() {
         case "tackled":
             // send command "tackle"
             cc.run("tackle", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
+            gc.ongoing.what = "";
+            canvas.redraw();
+            break;
+
+        case "covered":
+            // send command "tackle"
+            cc.run("cover", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;

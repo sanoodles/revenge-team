@@ -40,8 +40,31 @@ function CommandController () {
         app.unstun();
     };
 
-    this.move = function (capId, x, y) {            
+    this.move = function (capId, x, y) { 
+
         var cap = app.getCapById(capId);
+
+        // if this cap is covered by another cap, we should also
+        // move it. Done before moving the current cap because
+        // at this point we have origin and end of movement
+        if (cap.coveredBy instanceof Cap) {
+
+            dist = utils.getEuclideanDistance(cap.x, cap.y, x, y);
+            var capD = cap.coveredBy,
+            x_mov = x - cap.x,
+            y_mov = y - cap.y;
+
+            capD.moveIfCovering(x_mov, y_mov);
+
+            // if the separation between both caps now is bigger
+            // than defemders's D area the cover is broken
+            separation = utils.getEuclideanDistance(x, y, capD.x, capD.y);
+            if (separation > capD.getDefenseRange()) {
+                capD.covering = null;
+                cap.coveredBy = null;
+            } 
+        }
+
         /*
          * TODO: checking whether can put cap on coords
          * because the client can't be trusted
@@ -58,6 +81,11 @@ function CommandController () {
     this.tackle = function(capId, x, y) {
 
         app.tackle(capId, x, y);
+    };
+
+    this.cover = function(capId, x, y) {
+
+        app.cover(capId, x, y);
     };
 
     this.dribbling = function(capId, x, y) {

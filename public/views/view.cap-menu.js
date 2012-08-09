@@ -42,6 +42,9 @@ var capMenu = {
                     case "tackle":
                         gc.ongoing.what = "start tackle";
                         break;
+                    case "cover":
+                        gc.ongoing.what = "start cover";
+                        break;
                     }
                     capMenu.hide();
                     canvas.redraw();
@@ -51,6 +54,10 @@ var capMenu = {
 
     },
 
+    /*
+    * ballControl -> if the cap clicked has the ball
+    * teamPossession -> if the cap clicked team has the ball
+    */
     show: function (relX, relY, ballControl, teamPossession) {
 
         /*
@@ -62,6 +69,7 @@ var capMenu = {
         $("#cap-menu-pass").attr("disabled", !ballControl);
         $("#cap-menu-dribbling").attr("disabled", !ballControl);
         $("#cap-menu-tackle").attr("disabled", teamPossession);
+        $("#cap-menu-cover").attr("disabled", teamPossession);
         $capMenu.children().each(function (index, element) {
             element.style.display = (element.disabled ? "none" : "");
         });
@@ -69,7 +77,7 @@ var capMenu = {
         if (ballControl) {
             menuSize = 3;
         } else if (!teamPossession) {
-            menuSize = 2;
+            menuSize = 3;
         } else {
             menuSize = 1;
         }

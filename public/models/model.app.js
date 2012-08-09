@@ -76,6 +76,19 @@ var app = {
         }
     },
 
+    // the defender capId will cover the attacker in (x,y)
+    cover: function(capId, x, y) {
+        // cap to cover
+        capA = field.getElementByCoords(x, y);
+        // the defender that will cover
+        capD = app.getCapById(capId);
+
+        if (capA instanceof Cap) {
+            capD.covering = capA;
+            capA.coveredBy = capD;
+        }
+    },
+
     /**
      * The possession can be given to a cap, or cleared.
      *
@@ -85,7 +98,21 @@ var app = {
      * Possession > Cap.
      */
     possession: {
+
         give: function (cap) {
+
+            // if the current "cap" has a different team from the old
+            // possesion cap the possesion have changed of team
+            if (app.ball.poss !== null && cap.team !== app.ball.poss.team) {
+                // we will clear all the coveredBy - covering
+                // attributes because the D caps are A now
+                var i, max;
+                for (i = 0, max = app.caps.length; i < max; i++) {
+                    app.caps[i].coveredBy = null;
+                    app.caps[i].covering = null;
+                }
+            }
+            
             app.ball.poss = cap;
             app.ball.x = cap.x;
             app.ball.y = cap.y;
@@ -97,6 +124,9 @@ var app = {
                     app.caps[i].teampos = false;
                 } else {
                     app.caps[i].teampos = true;
+                    //if this team has possesion, its caps cannot cover
+                    app.caps[i].coveredBy = null;
+                    app.caps[i].covering = null;
                 }
             }
         },

@@ -220,8 +220,9 @@ var canvas = {
             );
         }
 
-        // tackle area preview
-        if (gc.ongoing.what === "start tackle" || gc.ongoing.what === "tackling") {
+        // tackle / cover area preview
+        if (gc.ongoing.what === "start tackle" || gc.ongoing.what === "tackling"
+            || gc.ongoing.what === "start cover" || gc.ongoing.what === "covering") {
             drawCircle(
                 gc.ongoing.who.x,
                 gc.ongoing.who.y,
@@ -298,6 +299,15 @@ var canvas = {
                     '#777777'
                 );
             }
+            // if this cap is covering another, we just draw a line between both
+            // to mark it visually. it has no effect. only visual.
+            if (app.caps[i].covering instanceof Cap) {
+                ctx.beginPath();
+                ctx.moveTo(app.caps[i].x, app.caps[i].y);
+                ctx.lineTo(app.caps[i].covering.x, app.caps[i].covering.y);
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            } 
         }
 
         // cap move preview
@@ -310,9 +320,10 @@ var canvas = {
             );
         }
 
-        // cap tackling / dribbling target preview
+        // cap tackling / dribbling / covering target preview
         if (gc.ongoing.what === "tackling" || gc.ongoing.what === "start tackle"
-            || gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling") {
+            || gc.ongoing.what === "dribbling" || gc.ongoing.what === "start dribbling"
+            || gc.ongoing.what === "covering" || gc.ongoing.what === "start cover") {
             drawCircle( // point where to dribble
                 gc.dragPreview.x,
                 gc.dragPreview.y,
