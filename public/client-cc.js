@@ -29,17 +29,19 @@ cc.init = function () {
     this.genericInit();
     socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
     cc.remotePlayers = [];
+    
     socket.on("update", onUpdate);
     socket.on("connect", onSocketConnected);
     socket.on("disconnect", onSocketDisconnect);
+    socket.on("game is full", onGameIsFull);
     socket.on("new player", onNewPlayer);
     socket.on("move player", onMovePlayer);
     socket.on("remove player", onRemovePlayer);
 };
 
 cc.playerById = function (id) {
-    var i;
-    for (i = 0; i < cc.remotePlayers.length; i++) {
+    var i, max;
+    for (i = 0, max = cc.remotePlayers.length; i < max; i++) {
         if (cc.remotePlayers[i].id == id)
             return cc.remotePlayers[i];
     };
@@ -56,10 +58,14 @@ function onSocketDisconnect() {
     console.log("Disconnected from socket server");
 }
 
+function onGameIsFull () {
+    console.log("Game is full");
+}
+
 function onNewPlayer(data) {
     console.log("New player connected: " + data.id);
-    var newPlayer = new User();
-    newPlayer.id = data.id;
+    var newPlayer = new User(data.id);
+    newPlayer.team = data.team;
     cc.remotePlayers.push(newPlayer);
     console.log(cc.remotePlayers);
 }

@@ -36,6 +36,7 @@ cc.init = function () {
 cc.onSocketConnection = function (client) {
     util.log("New player has connected: " + client.id);
     this.emit("update", cc.getStatus());
+    
     client.on("disconnect", onClientDisconnect);
     client.on("new player", onNewPlayer);
     client.on("move", onMove);
@@ -57,35 +58,42 @@ function onClientDisconnect () {
 };
 
 function onNewPlayer(params) {
-    var newPlayer = new User();
-    newPlayer.id = this.id;
-    this.broadcast.emit("new player", {id: newPlayer.id});
+
+    // check max players
+    if (cc.players.length >= 2) {
+        this.emit("game is full");
+        return;
+    }
+    
+    var newPlayer = new User(this.id);
+    newPlayer.team = cc.players.length == 0 ? Team.LOCAL : Team.VISITOR;
+    this.broadcast.emit("new player", {id: newPlayer.id, team: newPlayer.team});
     var i, existingPlayer;
     for (i = 0; i < cc.players.length; i++) {
         existingPlayer = cc.players[i];
-        this.emit("new player", {id: existingPlayer.id});
+        this.emit("new player", {id: existingPlayer.id, team: existingPlayer.team});
     };
     cc.players.push(newPlayer);
     cc.players.forEach(function (x) { util.log(x.id) });
 };
 
 function onMove (params) {
-    util.log("move");
+    util.log("move " + this.id);
     cc.move(params.capId, params.x, params.y);
     this.emit("update", cc.getStatus()); // to the sender
     this.broadcast.emit("update", cc.getStatus()); // to all the rest
 };
 
 function onPass (params) {
-    util.log("pass");
+    util.log("pass " + this.id);
     cc.pass(params.x, params.y);
     this.emit("update", cc.getStatus()); // to the sender
     this.broadcast.emit("update", cc.getStatus()); // to all the rest
 };
 
 cc.playerById = function (id) {
-    var i;
-    for (i = 0; i < cc.players.length; i++) {
+    var i, max;
+    for (i = 0, max = cc.players.length; i < max; i++) {
         if (cc.players[i].id == id)
             return cc.players[i];
     };
