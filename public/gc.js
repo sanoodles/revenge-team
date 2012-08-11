@@ -159,7 +159,7 @@ function documentInit() {
             // send command "pass"
             cc.run("pass", {x: gc.ballPreview.x, y: gc.ballPreview.y});
             gc.ongoing.what = "";
-            // canvas.redraw();
+            canvas.redraw();
             break;
         }
     });

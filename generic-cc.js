@@ -21,9 +21,9 @@ function CommandController () {
 
     this.genericInit = function () {
         // object creation needed by both client and server
-        app.caps[0] = new Cap(0, 50, 50, Team.LOCAL);
-        app.caps[1] = new Cap(1, 100, 100, Team.LOCAL);
-        app.caps[2] = new Cap(2, 150, 150, Team.VISITOR);
+        app.caps[0] = new Cap(1, 50, 50, Team.LOCAL);
+        app.caps[1] = new Cap(2, 100, 100, Team.LOCAL);
+        app.caps[2] = new Cap(3, 150, 150, Team.VISITOR);
         app.ball = new Ball(200, 200);
     };
 

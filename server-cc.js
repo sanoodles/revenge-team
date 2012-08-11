@@ -3,7 +3,7 @@ var app         = require('./public/models/model.app.js').app
     Cap         = require('./public/models/model.cap.js').Cap,
     CommandController   = require("./generic-cc.js").CommandController,
     field       = require('./public/models/model.field.js').field,
-    User      = require('./public/models/model.user.js').User,
+    User        = require('./public/models/model.user.js').User,
     PreviewBall = require('./public/models/model.ball.js').PreviewBall,
     Team        = require('./public/models/model.team.js').Team,
     util        = require("util");
@@ -34,7 +34,7 @@ cc.init = function () {
 };
 
 cc.onSocketConnection = function (client) {
-    util.log("New player has connected: " + client.id);
+    util.log("New user has connected: " + client.id);
     this.emit("update", cc.getStatus());
     
     client.on("disconnect", onClientDisconnect);
@@ -57,28 +57,46 @@ function onClientDisconnect () {
     cc.players.forEach(function (x) { util.log(x.id) });
 };
 
+/**
+ * It can be only a maximum of 2 user per game. This function contains
+ * some code ready for N users per game; it could be simplified, but
+ * also serves as code sample for managing N users.
+ */
 function onNewPlayer(params) {
-
     // check max players
     if (cc.players.length >= 2) {
         this.emit("game is full");
         return;
     }
-    
+
+    // create new user
     var newPlayer = new User(this.id);
     newPlayer.team = cc.players.length == 0 ? Team.LOCAL : Team.VISITOR;
+
+    // notifiy of new user to all users but the new
     this.broadcast.emit("new player", {id: newPlayer.id, team: newPlayer.team});
+
+    // inform the new user about the previous existing users
     var i, existingPlayer;
     for (i = 0; i < cc.players.length; i++) {
         existingPlayer = cc.players[i];
         this.emit("new player", {id: existingPlayer.id, team: existingPlayer.team});
     };
+
+    // add the new user to the server list of users
     cc.players.push(newPlayer);
     cc.players.forEach(function (x) { util.log(x.id) });
 };
 
 function onMove (params) {
     util.log("move " + this.id);
+
+    // check user and cap are same team
+    if (cc.playerById(this.id).team != app.getCapById(params.capId).team) {
+        this.emit("not your cap");
+        return;
+    }
+    
     cc.move(params.capId, params.x, params.y);
     this.emit("update", cc.getStatus()); // to the sender
     this.broadcast.emit("update", cc.getStatus()); // to all the rest
@@ -100,6 +118,5 @@ cc.playerById = function (id) {
 
     return false;
 };
-
 
 cc.init();

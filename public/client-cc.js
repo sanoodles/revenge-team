@@ -34,6 +34,7 @@ cc.init = function () {
     socket.on("connect", onSocketConnected);
     socket.on("disconnect", onSocketDisconnect);
     socket.on("game is full", onGameIsFull);
+    socket.on("not your cap", onNotYourCap);
     socket.on("new player", onNewPlayer);
     socket.on("move player", onMovePlayer);
     socket.on("remove player", onRemovePlayer);
@@ -62,6 +63,10 @@ function onGameIsFull () {
     console.log("Game is full");
 }
 
+function onNotYourCap () {
+    console.log("Not your cap");
+}
+
 function onNewPlayer(data) {
     console.log("New player connected: " + data.id);
     var newPlayer = new User(data.id);
@@ -88,23 +93,16 @@ function onRemovePlayer(data) {
 
 /**
  * Run command
+ * There is no command prediction; just forward to the server
  */
 cc.run = function (cmd, params) {
     // socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-
-    switch (cmd) {
-        case "move":
-            this.move(params.capId, params.x, params.y);
-            break;
-        case "pass":
-            this.pass(params.x, params.y);
-            break;
-    }
-    
+    console.log("run", cmd, params);    
     socket.emit(cmd, params);
 }
 
 function onUpdate (params) {
+    console.log("update", params);
     cc.setStatus(params);
     gc.onModelUpdate();
 }
