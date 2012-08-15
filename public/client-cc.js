@@ -3,10 +3,9 @@ Client Command Controller
 Inherits from Generic Command Controller (/generic-cc.js)
 
     On user command:
-        Generic behavior
         Forwards the command to the server
-    On server command:
-        Generic behavior
+    On server response:
+        Updates the local model
         Calls the graphic controller
 */
 
@@ -25,20 +24,14 @@ cc.socket = null;
 cc.localPlayer = null;
 cc.remotePlayers = null;
 
-cc.init = function () {
-    this.genericInit();
-    socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
-    cc.remotePlayers = [];
-    
-    socket.on("update", onUpdate);
-    socket.on("connect", onSocketConnected);
-    socket.on("disconnect", onSocketDisconnect);
-    socket.on("game is full", onGameIsFull);
-    socket.on("not your cap", onNotYourCap);
-    socket.on("new player", onNewPlayer);
-    socket.on("move player", onMovePlayer);
-    socket.on("remove player", onRemovePlayer);
-};
+/**
+ * Status of the ongoing turn
+ *
+ * "": command not sent
+ * "command sent": command sent, waiting for server to response with an
+ *                  update of the game state
+ */
+cc.turnStatus = null;
 
 cc.playerById = function (id) {
     var i, max;
@@ -50,36 +43,96 @@ cc.playerById = function (id) {
     return false;
 };
 
-function onSocketConnected() {
-    console.log("Connected to socket server");
-    socket.emit("new player", {});
+
+cc.init = function () {
+    this.genericInit();
+    cc.socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
+    cc.remotePlayers = [];
+    cc.commandSent = false;
+    
+    cc.socket.on("connect", onSocketConnected);
+    cc.socket.on("console.log", onConsoleLog);
+    cc.socket.on("game is full", onGameIsFull);
+    cc.socket.on("already commanded", onAlreadyCommanded);
+    cc.socket.on("new player", onNewPlayer);
+    cc.socket.on("not your cap", onNotYourCap);
+    cc.socket.on("update", onUpdate);
+    cc.socket.on("turn end", onTurnEnd);
+    cc.socket.on("remove player", onRemovePlayer);
+    cc.socket.on("disconnect", onSocketDisconnect);
+};
+
+/**
+ * Run command
+ * There is no command prediction; just forward to the server
+ */
+cc.run = function (cmd, params) {
+    // socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
+    console.log("run", cmd, params);    
+    cc.socket.emit(cmd, params);
+    cc.turnStatus = "command sent";
 }
 
-function onSocketDisconnect() {
-    console.log("Disconnected from socket server");
+function onSocketConnected () {
+    console.log("Connected to socket server");
+    cc.socket.emit("new player", {});
+}
+
+/**
+ * Console.logs stuff from the server
+ */
+function onConsoleLog (stuff) {
+    console.log("Server says:", stuff);
+}
+
+/**
+ * Receives an update of the status of the game
+ */
+function onUpdate (status) {
+    console.log("update", status);
+    cc.setStatus(status);
+    gc.onModelUpdate();
 }
 
 function onGameIsFull () {
     console.log("Game is full");
 }
 
-function onNotYourCap () {
-    console.log("Not your cap");
+function onAlreadyCommanded () {
+    console.log("Already commanded");
 }
 
 function onNewPlayer(data) {
     console.log("New player connected: " + data.id);
     var newPlayer = new User(data.id);
-    newPlayer.team = data.team;
+
+    newPlayer.setTeam(data.team);
     cc.remotePlayers.push(newPlayer);
-    console.log(cc.remotePlayers);
+    console.log("remotePlayers: ", cc.remotePlayers.map(function (u) { return u.getStatus() }));
 }
 
-function onMovePlayer(data) {
+function onNotYourCap () {
+    console.log("Not your cap");
+}
 
+/**
+ * Receives the event that the ongoing turn has finished
+ * @param params.status The status of the game at the end of the turn
+ */
+function onTurnEnd (params) {
+    console.log("turn end", params);
+    cc.setStatus(params.status);
+    cc.turnStatus = "";
+    gc.onTurnEnd();
+}
+
+function onSocketDisconnect() {
+    console.log("Disconnected from socket server");
 }
 
 function onRemovePlayer(data) {
+    console.log("remove player", data);
+    
     var removePlayer = cc.playerById(data.id);
 
     if (!removePlayer) {
@@ -89,20 +142,4 @@ function onRemovePlayer(data) {
 
     cc.remotePlayers.splice(cc.remotePlayers.indexOf(removePlayer), 1);
     console.log(cc.remotePlayers);
-}
-
-/**
- * Run command
- * There is no command prediction; just forward to the server
- */
-cc.run = function (cmd, params) {
-    // socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-    console.log("run", cmd, params);    
-    socket.emit(cmd, params);
-}
-
-function onUpdate (params) {
-    console.log("update", params);
-    cc.setStatus(params);
-    gc.onModelUpdate();
 }
