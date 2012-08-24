@@ -54,7 +54,7 @@ var gc = {
             YDiff = Math.max(mouseYDiff, maxYDiff);
             gc.dragPreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
         }
-    }
+    },
 
     /**
      * Composed command, before it has been sent and the other user
@@ -222,8 +222,6 @@ function documentInit() {
             // compose command move
             gc.setComposedCommand(["move", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y}]);
             gc.ongoing.what = "";
-            // make valid again all the stunned / dribbled caps
-            cc.run("unstun");
             canvas.redraw();
             break;
 
@@ -231,8 +229,6 @@ function documentInit() {
             // compose command pass
             gc.setComposedCommand(["pass", {x: gc.ballPreview.x, y: gc.ballPreview.y}]);
             gc.ongoing.what = "";
-            // make valid again all the stunned / dribbled caps
-            cc.run("unstun");
             canvas.redraw();
             break;
 

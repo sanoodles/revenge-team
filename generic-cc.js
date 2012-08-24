@@ -24,7 +24,7 @@ function CommandController () {
         app.caps[0] = new Cap(1, 50, 50, Team.LOCAL);
         app.caps[1] = new Cap(2, 100, 100, Team.LOCAL);
         app.caps[2] = new Cap(3, 150, 150, Team.VISITOR);
-        app.caps[3] = new Cap(3, 200, 200, Team.VISITOR);
+        app.caps[3] = new Cap(4, 200, 200, Team.VISITOR);
         app.ball = new Ball(200, 200);
     };
 
@@ -61,7 +61,7 @@ function CommandController () {
         });
     };
 
-    // unstun all the caps, every turn. caps are stunned only 1 turn
+[]    // unstun all the caps, every turn. caps are stunned only 1 turn
     this.unstun = function () {
         app.unstun();
     };
