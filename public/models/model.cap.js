@@ -6,9 +6,10 @@
  */
  
 if (typeof CLIENT_SIDE === 'undefined') {
-    var utils = require('../utils.js').utils,
+    var util = require("util"),
+        app = require('./model.app.js').app,
         field = require('./model.field.js').field,
-        app = require('./model.app.js').app;
+        utils = require('../utils.js').utils;
 }
 
 function GenericCap() {
@@ -81,6 +82,14 @@ function GenericCap() {
             } 
         }
     };
+
+    this.getStatus = function () {
+        return {
+            id: this.id,
+            x: this.x,
+            y: this.y
+        };
+    }
 }
 
 function Cap(id, x, y, team) {

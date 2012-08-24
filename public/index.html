@@ -11,6 +11,7 @@
 <script src="http://localhost:8000/socket.io/socket.io.js"></script>
 <script src="this-sucks.js"></script>
 <script src="utils.js"></script>
+<script src="models/model.user.js"></script>
 <script src="models/model.field.js"></script>
 <script src="models/model.team.js"></script>
 <script src="models/model.cap.js"></script>
@@ -23,6 +24,12 @@
 <script src="gc.js"></script>
 </head>
 <body>
+    <p id="command">
+    </p>
+    <p>
+        <input type="button" id="send-command" value="Send command">
+        <input type="button" id="discard-command" value="Discard command">
+    </p>
     <canvas id="canvas" width="140" height="100"></canvas>
     <select id="cap-menu" size="2">
         <option id="cap-menu-move" value="move">Move</option>

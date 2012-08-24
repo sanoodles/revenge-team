@@ -192,7 +192,7 @@ var app = {
                     aPost = a + aerr,
                     pi = Math.PI, twoPi = Math.PI * 2;
 
-                /* Detect rival caps inside the pass cone
+                /* Detect unstunned rival caps inside the pass cone
                  * In particular, it detects whether the center of a rival cap
                  * is inside the pass cone; not whether there is a rival cap
                  * touching the pass cone.
@@ -419,3 +419,9 @@ app.save = function (args) {
 }
 
 if (typeof CLIENT_SIDE === 'undefined') exports.app = app;
+
+if (typeof CLIENT_SIDE === 'undefined') {
+    var Cap     = require("./model.cap.js").Cap,
+        field   = require('./model.field.js').field,
+        utils   = require("../utils.js").utils;
+}

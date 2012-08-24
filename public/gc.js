@@ -4,6 +4,7 @@
  * - Chooses the view to be rendered and calls it
  *      - Actually "configures" the only view (canvas)
  *          - Actually writes the var named "gc"
+ * - Stores the composed command before sending it to the command controller
  * - Sends commands to the command controller
  */
 
@@ -15,7 +16,7 @@ var gc = {
         who: null // command subject (eg: a Cap)
     },
 
-    // preview of the future position of the ball after passing
+    // preview of the ball to aid the user describe her command
     ballPreview: new PreviewBall(),
 
     // preview for the user drag action: move, dribble, tackle,...
@@ -53,6 +54,25 @@ var gc = {
             YDiff = Math.max(mouseYDiff, maxYDiff);
             gc.dragPreview.y = Math.max(gc.ongoing.who.y + YDiff, field.marginV);
         }
+    }
+
+    /**
+     * Composed command, before it has been sent and the other user
+     * has also sent her command and the server has responded with the
+     * new state of the game.
+     *
+     * Array with two positions
+     * [0] = command name
+     * [1] = command parameters
+     */
+    _composedCommand: [],
+
+    getComposedCommand: function () {
+        return gc._composedCommand;
+    },
+    setComposedCommand: function (command) {
+        gc._composedCommand = command;
+        $("command").html(command);
     },
 
     // used after the client's model is updated by the server
@@ -60,6 +80,11 @@ var gc = {
         canvas.redraw();
     },
     
+    // used after a turn has ended
+    onTurnEnd: function () {
+        canvas.redraw();
+    }
+
 };
 
 /*
@@ -76,9 +101,6 @@ $(window).load(function () {
 
     // output channel initialization
     canvas.init();
-
-    // first screen paint
-    canvas.redraw();
 });
 
 // helper
@@ -197,8 +219,8 @@ function documentInit() {
         switch (gc.ongoing.what) {
 
         case "moved":
-            // send command "move"
-            cc.run("move", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
+            // compose command move
+            gc.setComposedCommand(["move", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y}]);
             gc.ongoing.what = "";
             // make valid again all the stunned / dribbled caps
             cc.run("unstun");
@@ -206,8 +228,8 @@ function documentInit() {
             break;
 
         case "passed":
-            // send command "pass"
-            cc.run("pass", {x: gc.ballPreview.x, y: gc.ballPreview.y});
+            // compose command pass
+            gc.setComposedCommand(["pass", {x: gc.ballPreview.x, y: gc.ballPreview.y}]);
             gc.ongoing.what = "";
             // make valid again all the stunned / dribbled caps
             cc.run("unstun");
@@ -234,6 +256,17 @@ function documentInit() {
             gc.ongoing.what = "";
             canvas.redraw();
             break;
+        }
+    });
+
+    $("#send-command").click(function (e) {
+        cc.run(gc.getComposedCommand()[0], gc.getComposedCommand()[1]);
+        gc.setComposedCommand([]);
+    });
+
+    $("#discard-command").click(function (e) {
+        if (confirm("Confirm discard command")) {
+            gc.setComposedCommand([]);
         }
     });
 

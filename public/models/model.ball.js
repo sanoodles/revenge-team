@@ -17,6 +17,13 @@ function Ball (x, y) {
     this.save = function () {
         app.save("Ball", this.x, this.y, this.poss ? this.poss.id : 0);
     }
+    this.getStatus = function () {
+        return {
+            x: this.x,
+            y: this.y,
+            poss: this.poss ? this.poss.id : null
+        }
+    }
 }
 Ball.prototype = new AbstractBall();
 
