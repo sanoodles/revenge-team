@@ -279,7 +279,7 @@ function documentInit() {
 
     $("#discard-command").click(function (e) {
         if (confirm("Confirm discard command")) {
-            gc.clearComposedCommand;
+            gc.clearComposedCommand();
         }
     });
 
