@@ -95,6 +95,11 @@ cc.run = function (cmd, params) {
     cc.turnStatus = "command sent";
 }
 
+/**
+ * For now, on socket connection the client simply says "i'm a new player"
+ * In the future may be needed to cover the case for (re)connections
+ * after an accidental disconnect.
+ */
 function onSocketConnected () {
     console.log("Connected to socket server");
     cc.socket.emit("new player", {});
@@ -148,8 +153,14 @@ function onTurnEnd (params) {
     gc.onTurnEnd();
 }
 
+/**
+ * Always resets remote players list because onSocketConnect always says
+ * "I'm a new player" to the server.
+ * @see onSocketConnect
+ */
 function onSocketDisconnect() {
     console.log("Disconnected from socket server");
+    cc.remotePlayers = [];
 }
 
 function onRemovePlayer(data) {

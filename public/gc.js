@@ -1,11 +1,11 @@
 /**
  * Graphic controller
  * - Receives input from the user
+ * - Stores the composed command before sending it to the command controller
+ * - Sends commands to the command controller
  * - Chooses the view to be rendered and calls it
  *      - Actually "configures" the only view (canvas)
  *          - Actually writes the var named "gc"
- * - Stores the composed command before sending it to the command controller
- * - Sends commands to the command controller
  */
 
 var gc = {
@@ -24,6 +24,9 @@ var gc = {
         x: 0,
         y: 0
     },
+
+    // send command without having to press "Send command"
+    autoSendCommand: true, // for debugging
 
     // checks that the user drag actions are inside the skill range
     dragCheck: function (mouseX, mouseY, range) {
@@ -61,18 +64,33 @@ var gc = {
      * has also sent her command and the server has responded with the
      * new state of the game.
      *
-     * Array with two positions
-     * [0] = command name
-     * [1] = command parameters
+     * Hash with two fields
+     * name = command name
+     * parameters = command parameters
+     *
      */
-    _composedCommand: [],
+    _composedCommand: null,
+
+    sendCommand: function () {
+        cc.run(gc.getComposedCommand().name, gc.getComposedCommand().parameters);
+        gc.clearComposedCommand;
+    },
 
     getComposedCommand: function () {
         return gc._composedCommand;
     },
-    setComposedCommand: function (command) {
-        gc._composedCommand = command;
-        $("command").html(command);
+
+    setComposedCommand: function (name, parameters) {
+        gc._composedCommand = {name: name, parameters: parameters};
+        $("command").html(name + ": " + parameters.toString());
+
+        if (gc.autoSendCommand) {
+            gc.sendCommand();
+        }
+    },
+
+    clearComposedCommand: function () {
+        gc._composedCommand = null;
     },
 
     // used after the client's model is updated by the server
@@ -220,35 +238,35 @@ function documentInit() {
 
         case "moved":
             // compose command move
-            gc.setComposedCommand(["move", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y}]);
+            gc.setComposedCommand("move", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;
 
         case "passed":
             // compose command pass
-            gc.setComposedCommand(["pass", {x: gc.ballPreview.x, y: gc.ballPreview.y}]);
+            gc.setComposedCommand("pass", {x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;
 
         case "dribbled":
             // send command "dribbling"
-            cc.run("dribbling", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
+            gc.setComposedCommand("dribbling", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;
 
         case "tackled":
             // send command "tackle"
-            cc.run("tackle", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
+            gc.setComposedCommand("tackle", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;
 
         case "covered":
             // send command "tackle"
-            cc.run("cover", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
+            gc.setComposedCommand("cover", {capId: gc.ongoing.who.id, x: gc.dragPreview.x, y: gc.dragPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;
@@ -256,13 +274,12 @@ function documentInit() {
     });
 
     $("#send-command").click(function (e) {
-        cc.run(gc.getComposedCommand()[0], gc.getComposedCommand()[1]);
-        gc.setComposedCommand([]);
+        gc.sendCommand();
     });
 
     $("#discard-command").click(function (e) {
         if (confirm("Confirm discard command")) {
-            gc.setComposedCommand([]);
+            gc.clearComposedCommand;
         }
     });
 

@@ -19,8 +19,8 @@ var capMenu = {
             gc.ongoing.what = "cap menu click";
         });
 
-        $(this.el).mouseup(function (e) {
-            debug("capmenu mouseup");
+        $(this.el).click(function (e) {
+            debug("capmenu click");
             if (gc.ongoing.what === "cap menu click") {
 
                 // As of jQuery 1.7.2, $("#cap-menu").val() uses depecrated techniques.

@@ -37,7 +37,7 @@ cc.init = function () {
     app.caps[1].setPosition(field.getRandomX(), field.getRandomY());
     app.caps[2].setPosition(field.getRandomX(), field.getRandomY());
     app.ball.setPosition(field.getRandomX(), field.getRandomY());
-    
+
     cc.socket = cc.io.listen(8000);
     cc.socket.configure(function() {
         cc.socket.set("transports", ["websocket"]);
@@ -64,10 +64,14 @@ cc.bcastUpdate = function (client) {
 cc.onSocketConnection = function (client) {
     util.log("New user has connected: " + client.id);
     this.emit("update", cc.getStatus());
-    
+
+    // messages composed by client-cc or gc
     client.on("new player", onNewPlayer);
     client.on("move", onMove);
     client.on("pass", onPass);
+    client.on("dribbling", onDribbling);
+    client.on("tackle", onTackle);
+    client.on("cover", onCover);
     client.on("disconnect", onClientDisconnect);
 };
 
@@ -94,7 +98,7 @@ cc.turn.end = function (client) {
  */
 function onNewPlayer (params) {
     "use strict";
-    
+
     // check max players
     if (cc.players.length >= 2) {
         this.emit("game is full");
@@ -132,12 +136,12 @@ function onMove (params) {
         this.emit("already commanded");
         return;
     }
-    
+
     if (user.getTeam() != cap.team) {
         this.emit("not your cap");
         return;
     }
-    
+
     cc.turn.receivedCommand[user.getTeam()] = "move";
     cc.move(params.capId, params.x, params.y);
     if (cc.turn.canEnd()) cc.turn.end(this);
@@ -147,17 +151,85 @@ function onPass (params) {
     util.log("pass " + this.id);
 
     var user = cc.playerById(this.id),
-        cap = app.getCapById(params.capId);
+        cap = app.ball.poss;
 
     if (cc.turn.receivedCommand[user.getTeam()] != "") {
         this.emit("already commanded");
         return;
     }
-    
+
+    if (user.getTeam() != cap.team) {
+        this.emit("not your cap");
+        return;
+    }
+
     cc.turn.receivedCommand[user.getTeam()] = "pass";
     cc.pass(params.x, params.y);
     if (cc.turn.canEnd()) cc.turn.end(this);
 };
+
+function onDribbling (params) {
+    util.log("dribbling" + this.id);
+
+    var user = cc.playerById(this.id),
+        cap = app.getCapById(params.capId);
+    
+    if (cc.turn.receivedCommand[user.getTeam()] != "") {
+        this.emit("already commanded");
+        return;
+    }
+
+    if (user.getTeam() != cap.team) {
+        this.emit("not your cap");
+        return;
+    }
+
+    cc.turn.receivedCommand[user.getTeam()] = "dribbling";
+    cc.dribbling(params.capId, params.x, params.y);
+    if (cc.turn.canEnd()) cc.turn.end(this);
+}
+
+function onTackle (params) {
+    util.log("tackle" + this.id);
+
+    var user = cc.playerById(this.id),
+        cap = app.getCapById(params.capId);
+    
+    if (cc.turn.receivedCommand[user.getTeam()] != "") {
+        this.emit("already commanded");
+        return;
+    }
+
+    if (user.getTeam() != cap.team) {
+        this.emit("not your cap");
+        return;
+    }
+
+    cc.turn.receivedCommand[user.getTeam()] = "tackle";
+    cc.tackle(params.capId, params.x, params.y);
+    if (cc.turn.canEnd()) cc.turn.end(this);
+}
+
+function onCover (params) {
+    util.log("cover" + this.id);
+
+    var user = cc.playerById(this.id),
+        cap = app.getCapById(params.capId);
+    
+    if (cc.turn.receivedCommand[user.getTeam()] != "") {
+        this.emit("already commanded");
+        return;
+    }
+
+    if (user.getTeam() != cap.team) {
+        this.emit("not your cap");
+        return;
+    }
+
+    cc.turn.receivedCommand[user.getTeam()] = "cover";
+    cc.cover(params.capId, params.x, params.y);
+    if (cc.turn.canEnd()) cc.turn.end(this);
+}
 
 function onClientDisconnect () {
     util.log("client disconnect " + this.id);

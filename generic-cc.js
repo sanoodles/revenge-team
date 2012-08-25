@@ -14,7 +14,8 @@ if (typeof CLIENT_SIDE === 'undefined') {
         Cap         = require('./public/models/model.cap.js').Cap,
         field       = require('./public/models/model.field.js').field,
         PreviewBall = require('./public/models/model.ball.js').PreviewBall,
-        Team        = require('./public/models/model.team.js').Team;
+        Team        = require('./public/models/model.team.js').Team,
+        utils       = require('./public/utils.js').utils;
 }
 
 function CommandController () {
