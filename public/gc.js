@@ -2,7 +2,7 @@
  * Graphic controller
  * - Receives input from the user
  * - Stores the composed command before sending it to the command controller
- * - Sends commands to the command controller
+ * - Sends the composed command to the command controller
  * - Chooses the view to be rendered and calls it
  *      - Actually "configures" the only view (canvas)
  *          - Actually writes the var named "gc"
@@ -241,7 +241,7 @@ function documentInit() {
 
         case "passed":
             // compose command pass
-            gc.setComposedCommand("pass", {x: gc.dragPreview.x, y: gc.dragPreview.y});
+            gc.setComposedCommand("pass", {x: gc.ballPreview.x, y: gc.ballPreview.y});
             gc.ongoing.what = "";
             canvas.redraw();
             break;

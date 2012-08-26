@@ -96,7 +96,7 @@ function Cap(id, x, y, team) {
     this.id = id;
     this.x = x;
     this.y = y;
-    this.speed = Math.random() * 60; // random for debugging
+    this.speed = 60; // random for debugging
     this.talent = 15; // getPassAngleError
     this.pass = 15; // getPassRange
     this.defense = 15; // getDefenseRange

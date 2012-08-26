@@ -125,9 +125,11 @@ function CommandController () {
 
         // pass to green zone
         if (distanceInRedZone <= 0) {
+            console.log("pass to green zone");
             app.pass.toGreenZone(x, y);
         // pass to red zone
         } else {
+            console.log("pass to red zone");
             app.pass.toRedZone(x, y);
         }
         app.pass.checkPossession();
