@@ -28,6 +28,52 @@ var gc = {
     // send command without having to press "Send command"
     autoSendCommand: true, // for debugging
 
+    /**
+     * Composed command, before it has been sent and the other user
+     * has also sent her command and the server has responded with the
+     * new state of the game.
+     *
+     * Hash with two fields
+     * name = command name
+     * parameters = command parameters
+     *
+     */
+    _composedCommand: null,
+
+    init: function () {
+        cc.init();
+
+        // input channel initialization
+        documentInit();
+        capMenu.init();
+        capMenu.hide();
+
+        // output channel initialization
+        canvas.init();
+    },
+
+    sendCommand: function () {
+        cc.run(gc.getComposedCommand().name, gc.getComposedCommand().parameters);
+        gc.clearComposedCommand;
+    },
+
+    getComposedCommand: function () {
+        return gc._composedCommand;
+    },
+
+    setComposedCommand: function (name, parameters) {
+        gc._composedCommand = {name: name, parameters: parameters};
+        $("#command").html(name + " " + JSON.stringify(parameters));
+        
+        if (gc.autoSendCommand) {
+            gc.sendCommand();
+        }
+    },
+
+    clearComposedCommand: function () {
+        gc._composedCommand = null;
+    },
+
     // checks that the user drag actions are inside the skill range
     dragCheck: function (mouseX, mouseY, range) {
         var mouseXDiff = mouseX - gc.ongoing.who.x,
@@ -59,40 +105,6 @@ var gc = {
         }
     },
 
-    /**
-     * Composed command, before it has been sent and the other user
-     * has also sent her command and the server has responded with the
-     * new state of the game.
-     *
-     * Hash with two fields
-     * name = command name
-     * parameters = command parameters
-     *
-     */
-    _composedCommand: null,
-
-    sendCommand: function () {
-        cc.run(gc.getComposedCommand().name, gc.getComposedCommand().parameters);
-        gc.clearComposedCommand;
-    },
-
-    getComposedCommand: function () {
-        return gc._composedCommand;
-    },
-
-    setComposedCommand: function (name, parameters) {
-        gc._composedCommand = {name: name, parameters: parameters};
-        $("command").html(name + ": " + parameters.toString());
-
-        if (gc.autoSendCommand) {
-            gc.sendCommand();
-        }
-    },
-
-    clearComposedCommand: function () {
-        gc._composedCommand = null;
-    },
-
     // used after the client's model is updated by the server
     onModelUpdate: function () {
         canvas.redraw();
@@ -104,22 +116,6 @@ var gc = {
     }
 
 };
-
-/*
- * Initialization after all resources have been downloaded
- */
-$(window).load(function () {
-    
-    cc.init();
-
-    // input channel initialization
-    documentInit();
-    capMenu.init();
-    capMenu.hide();
-
-    // output channel initialization
-    canvas.init();
-});
 
 // helper
 function documentInit() {
@@ -273,6 +269,12 @@ function documentInit() {
         }
     });
 
+    if (gc.autoSendCommand) {
+        $(".command-buttons").hide();
+    } else {
+        $(".command-buttons").show();
+    }
+    
     $("#send-command").click(function (e) {
         gc.sendCommand();
     });
@@ -284,3 +286,11 @@ function documentInit() {
     });
 
 }
+
+/*
+ * Initialization after all resources have been downloaded
+ */
+$(window).load(function () {
+    
+    gc.init();
+});
