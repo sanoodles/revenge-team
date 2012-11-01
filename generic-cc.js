@@ -62,7 +62,7 @@ function CommandController () {
         });
     };
 
-[]    // unstun all the caps, every turn. caps are stunned only 1 turn
+    // unstun all the caps, every turn. caps are stunned only 1 turn
     this.unstun = function () {
         app.unstun();
     };
@@ -117,9 +117,9 @@ function CommandController () {
         app.dribbling(capId, x, y);
     };
 
-      /**
-       * @pre ball.poss is the cap passing
-       */
+    /**
+     * @pre ball.poss is the cap passing
+     */
     this.pass = function (x, y) {
         distanceInRedZone = app.pass.getDistanceInRedZone(x, y);
 

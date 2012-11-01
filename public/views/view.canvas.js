@@ -65,8 +65,8 @@ var canvas = {
 
             // half line
             ctx.beginPath();
-            ctx.moveTo(field.marginH+field.width/2, field.marginV);
-            ctx.lineTo(field.marginH+field.width/2, field.marginV+field.height);
+            ctx.moveTo(field.marginH + field.width / 2, field.marginV);
+            ctx.lineTo(field.marginH + field.width / 2, field.marginV + field.height);
             ctx.strokeStyle = '#FFFFFF';
             ctx.lineWidth = 2;
             ctx.stroke();
@@ -75,12 +75,12 @@ var canvas = {
             ctx.beginPath();
             ctx.strokeRect(
                 field.marginH, 
-                field.marginV+(field.height-field.areaHeight)/2, 
+                field.marginV + (field.height - field.areaHeight) / 2, 
                 field.areaWidth, field.areaHeight
             );
             ctx.strokeRect(
-                field.marginH+field.width, 
-                field.marginV+(field.height-field.areaHeight)/2, 
+                field.marginH + field.width, 
+                field.marginV + (field.height - field.areaHeight) / 2, 
                 -field.areaWidth, field.areaHeight
             );
             ctx.lineWidth = 2;
@@ -90,12 +90,12 @@ var canvas = {
             ctx.beginPath();
             ctx.strokeRect(
                 field.marginH, 
-                field.marginV+(field.height-field.areaHeight)/2+(field.areaHeight-field.smallAreaHeight)/2, 
+                field.marginV + (field.height - field.areaHeight) / 2 + (field.areaHeight - field.smallAreaHeight) / 2, 
                 field.smallAreaWidth, field.smallAreaHeight
             );
             ctx.strokeRect(
-                field.marginH+field.width, 
-                field.marginV+(field.height-field.areaHeight)/2+(field.areaHeight-field.smallAreaHeight)/2, 
+                field.marginH + field.width, 
+                field.marginV + (field.height - field.areaHeight) / 2 + (field.areaHeight - field.smallAreaHeight) / 2, 
                 -field.smallAreaWidth, field.smallAreaHeight
             );
             ctx.lineWidth = 2;
@@ -104,8 +104,8 @@ var canvas = {
             // central circle and central dot
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width/2, field.marginV+field.height/2,
-                field.centralCircleRadius, 0, Math.PI*360/180, false
+                field.marginH + field.width / 2, field.marginV + field.height / 2,
+                field.centralCircleRadius, 0, Math.PI * 360 / 180, false
             );
             ctx.lineWidth = 2;
             ctx.stroke();
@@ -113,7 +113,7 @@ var canvas = {
             // central dot
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width/2, field.marginV+field.height/2,
+                field.marginH + field.width / 2, field.marginV + field.height/2,
                 2, 0, rads(360), false
             );
             ctx.lineWidth = 2;
@@ -122,14 +122,14 @@ var canvas = {
             // penalty dots
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.penaltyDistance,field.marginV+field.height/2,
+                field.marginH + field.penaltyDistance, field.marginV + field.height / 2,
                 1, 0, rads(360), false
             );
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width-field.penaltyDistance,field.marginV+field.height/2,
+                field.marginH + field.width - field.penaltyDistance, field.marginV + field.height / 2,
                 1, 0, rads(360), false
             );
             ctx.lineWidth = 2;
@@ -138,14 +138,14 @@ var canvas = {
             // penalty safe zones
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.penaltyDistance,field.marginV+field.height/2,
+                field.marginH + field.penaltyDistance,field.marginV + field.height / 2,
                 91, rads(-56), rads(56), false
             );
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width-field.penaltyDistance,field.marginV+field.height/2,
+                field.marginH+field.width - field.penaltyDistance,field.marginV + field.height/2,
                 91, rads(124), rads(236), false
             );
             ctx.lineWidth = 2;
@@ -161,21 +161,21 @@ var canvas = {
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width, field.marginV,
+                field.marginH + field.width, field.marginV,
                 10, rads(90), rads(180)
             );
             ctx.lineWidth = 2;
             ctx.stroke();
              ctx.beginPath();
             ctx.arc(
-                field.marginH+field.width, field.marginV+field.height,
+                field.marginH + field.width, field.marginV + field.height,
                 10, rads(180), rads(270)
             );
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(
-                field.marginH, field.marginV+field.height,
+                field.marginH, field.marginV + field.height,
                 10, rads(270), rads(365)
             );
             ctx.lineWidth = 2;
@@ -183,7 +183,9 @@ var canvas = {
         };
 
         // converts from degrees to radians
-        function rads(x) { return Math.PI*x/180; };
+        function rads (x) { 
+          return Math.PI * x / 180; 
+        };
 
         var i, // iterator (auxiliar)
             max, // loop limit (auxiliar)

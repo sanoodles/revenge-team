@@ -14,7 +14,7 @@ var cc = new CommandController();
 
 /*
  * TODO:
- * 1. Here (client-cc.js) define a ClientCommandController constructor
+ * 1. Here (client-cc.js), define a ClientCommandController constructor
  *      that inherits from CommandController (generic-cc.js)
  * 2. On gc.js, create an instance of ClientCommandController named cc
  *
@@ -68,28 +68,6 @@ cc.init = function () {
  * There is no command prediction; just forward to the server
  */
 cc.run = function (cmd, params) {
-/*
-    switch (cmd) {
-        case "move":
-            this.move(params.capId, params.x, params.y);
-            break;
-        case "dribbling":
-            this.dribbling(params.capId, params.x, params.y);
-            break;
-        case "tackle":
-            this.tackle(params.capId, params.x, params.y);
-            break;
-        case "cover":
-            this.cover(params.capId, params.x, params.y);
-            break;
-        case "pass":
-            this.pass(params.x, params.y);
-            break;
-        case "unstun":
-            this.unstun();
-            break;
-    }
-*/
     console.log("run", cmd, params);    
     cc.socket.emit(cmd, params);
     cc.turnStatus = "command sent";
